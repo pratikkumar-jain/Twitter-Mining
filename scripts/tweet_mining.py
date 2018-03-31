@@ -7,13 +7,14 @@ import jsonpickle
 import sys
 import tweepy
 
+from datetime import datetime
+
 
 def mineTweet(api):
     """Perform the mining operation."""
-    searchQuery = '#trump'
+    searchQuery = 'empire state building'
     maxTweets = float('inf')
     tweetsPerQry = 100
-    outputFileName = 'tweets.txt'
 
     # If results from a specific ID onwards are reqd, set since_id to that ID.
     # else default to no lower limit, go as far back as API allows
@@ -25,45 +26,66 @@ def mineTweet(api):
     max_id = -1.0
 
     tweetCount = 0
-    print("Downloading max {0} tweets".format(maxTweets))
-    with open(outputFileName, 'w') as f:
-        while tweetCount < maxTweets:
-            try:
-                if (max_id <= 0):
-                    if (not sinceId):
-                        new_tweets = api.search(q=searchQuery,
-                                                count=tweetsPerQry)
-                    else:
-                        new_tweets = api.search(q=searchQuery,
-                                                count=tweetsPerQry,
-                                                since_id=sinceId)
-                else:
-                    if (not sinceId):
-                        new_tweets = api.search(q=searchQuery,
-                                                count=tweetsPerQry,
-                                                max_id=str(max_id - 1))
-                    else:
-                        new_tweets = api.search(q=searchQuery,
-                                                count=tweetsPerQry,
-                                                max_id=str(max_id - 1),
-                                                since_id=sinceId)
-                if not new_tweets:
-                    print("No more tweets found")
-                    break
-                for tweet in new_tweets:
-                    f.write(jsonpickle.encode(tweet._json, unpicklable=False) +
-                            '\n')
-                tweetCount += len(new_tweets)
-                print("Downloaded {0} tweets".format(tweetCount))
-                max_id = new_tweets[-1].id
-                print(max_id, sinceId)
-            except tweepy.TweepError as e:
-                # Just exit if any error
-                print("some error : " + str(e))
-                break
 
-    print ("Downloaded {0} tweets, Saved to {1}".format(tweetCount,
-           outputFileName))
+    logFile = '../data/log.txt'
+
+    iteration = 0
+    iterFiles = []
+
+    with open(logFile, 'w') as logHandle:
+
+        logHandle.write('Downloading max {0} tweets\n'.format(maxTweets))
+
+        while tweetCount < maxTweets:
+
+            fileId = datetime.now().strftime('%Y%m%d%H%M%S')
+            outputFileName = '../data/tweets_{}.txt'.format(fileId)
+
+            with open(outputFileName, 'w') as f:
+                try:
+                    if (max_id <= 0):
+                        if (not sinceId):
+                            new_tweets = api.search(q=searchQuery,
+                                                    count=tweetsPerQry)
+                        else:
+                            new_tweets = api.search(q=searchQuery,
+                                                    count=tweetsPerQry,
+                                                    since_id=sinceId)
+                    else:
+                        if (not sinceId):
+                            new_tweets = api.search(q=searchQuery,
+                                                    count=tweetsPerQry,
+                                                    max_id=str(max_id - 1))
+                        else:
+                            new_tweets = api.search(q=searchQuery,
+                                                    count=tweetsPerQry,
+                                                    max_id=str(max_id - 1),
+                                                    since_id=sinceId)
+                    if not new_tweets:
+                        logHandle.write('No more tweets found')
+                        break
+
+                    for tweet in new_tweets:
+                        f.write(jsonpickle.encode(tweet._json,
+                                unpicklable=False) + '\n')
+
+                    tweetCount += len(new_tweets)
+
+                    logHandle.write('Downloaded {} tweets in current query\n'
+                                    .format(len(new_tweets)))
+
+                    max_id = new_tweets[-1].id
+
+                    logHandle.write('{} {}\n'.format(max_id, sinceId))
+
+                except tweepy.TweepError as e:
+                    # Just exit if any error
+                    print("some error : " + str(e))
+                    break
+
+            iteration += 1
+
+            if iteration % 20 == 0:
 
 
 def main():
