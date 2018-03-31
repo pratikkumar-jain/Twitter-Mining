@@ -92,9 +92,6 @@ def mineTweet(root, api, drive):
 
                     tweetCount += len(new_tweets)
 
-                    if len(new_tweets) > 0:
-                        iterFiles.append(outputFileName)
-
                     start_id = new_tweets[0].id
                     max_id = new_tweets[-1].id
 
@@ -113,12 +110,18 @@ def mineTweet(root, api, drive):
 
             iteration += 1
 
+            if len(new_tweets) > 0:
+                iterFiles.append(outputFileName)
+            else:
+                os.remove(outputFileName)
+
             if iteration % 20 == 0 and len(iterFiles) > 0:
 
                 zipFile = root + '/tweet_compressed_{}.zip'.format(
                     datetime.now().strftime('%Y%m%d%H%M%S'))
 
-                print('Zipping data to {}'.format(zipFile))
+                print('Zipping {} tweet\'s data to {}'.format(tweetCount,
+                                                              zipFile))
 
                 with ZipFile(zipFile, 'w') as zipHandle:
                     for file in iterFiles:
@@ -126,6 +129,7 @@ def mineTweet(root, api, drive):
                         os.remove(file)
 
                 iterFiles = []
+                tweetCount = 0
 
                 if drive:
                     with ZipFile(zipFile, 'rb') as zipHandle:
