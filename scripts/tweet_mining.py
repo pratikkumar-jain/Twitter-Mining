@@ -83,6 +83,8 @@ def mineTweet(root, api, drive):
                         print('No more tweets found')
                         lastSearch = True
                         break
+                    else:
+                        iterFiles.append(outputFileName)
 
                     f.write('[')
                     for tweet in new_tweets:
@@ -110,11 +112,6 @@ def mineTweet(root, api, drive):
 
             iteration += 1
 
-            if len(new_tweets) > 0:
-                iterFiles.append(outputFileName)
-            else:
-                os.remove(outputFileName)
-
             if iteration % 20 == 0 and len(iterFiles) > 0:
 
                 zipFile = root + '/tweet_compressed_{}.zip'.format(
@@ -140,6 +137,7 @@ def mineTweet(root, api, drive):
                         print('Uploaded file with ID {}'
                               .format(uploaded.get('id')))
 
+        # Zip the remaining jsons if 20 are not created
         if lastSearch and len(iterFiles) > 0:
 
             zipFile = root + '/tweet_compressed_{}.zip'.format(
@@ -152,6 +150,9 @@ def mineTweet(root, api, drive):
                     zipHandle.write(file)
                     os.remove(file)
 
+        # Remove the only empty file if no tweet is found
+        if lastSearch:
+            os.remove(outputFileName)
 
 def main():
     """Perform the initial setup."""
