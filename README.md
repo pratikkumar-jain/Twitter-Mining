@@ -44,6 +44,16 @@ STEP 2: Additional Dependencies
 
 STEP 3: Cloning the repository
 
+Run the following command on terminal to clone the repository or optionally you can use any other git management tool
+
+``git clone https://github.com/ankit13jain/Twitter-Mining.git``
+
+STEP 4: Getting Access to Twitter API Credentials
+
+* Open the Twitter Dev Apps website from [here](https://apps.twitter.com/)
+* 
+
+
 
 ## Running the code
 
