@@ -122,7 +122,7 @@ def main():
     uploaded = files.upload()
 
     for fn in uploaded.keys():
-        with open('../credential.json', 'r\w') as fileHandle:
+        with open('../credential.json', 'w') as fileHandle:
             fileHandle.write(uploaded[fn])
 
     with open('../credential.json', 'r') as fileHandle:
