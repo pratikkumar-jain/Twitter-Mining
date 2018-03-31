@@ -28,9 +28,10 @@ def mineTweet(root, api, drive):
     # If results from a specific ID onwards are reqd, set since_id to that ID.
     # else default to no lower limit, go as far back as API allows
     if os.path.exists('start_point.txt'):
-        print('Restarting mining')
         with open('start_point.txt', 'r') as startHandle:
             sinceId = int(startHandle.read().strip()) + 1
+
+        print('Restarting mining from {}'.format(sinceId))
     else:
         sinceId = None
 
@@ -91,7 +92,7 @@ def mineTweet(root, api, drive):
 
                     tweetCount += len(new_tweets)
 
-                    if tweetCount > 0:
+                    if len(new_tweets) > 0:
                         iterFiles.append(outputFileName)
 
                     start_id = new_tweets[0].id
