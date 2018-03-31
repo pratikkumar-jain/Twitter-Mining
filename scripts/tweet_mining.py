@@ -12,9 +12,8 @@ from datetime import datetime
 from zipfile import ZipFile
 
 
-def mineTweet(root, api, drive):
+def mineTweet(root, api, drive, searchQuery):
     """Perform the mining operation."""
-    searchQuery = 'empire state building'
     maxTweets = float('inf')
     tweetsPerQry = 100
 
@@ -197,8 +196,13 @@ def main():
         print('Authentication Problem')
         sys.exit(-1)
     else:
-        # 1. Authenticate and create the PyDrive client.
-        mineTweet(root, api, drive)
+        # Command line argument to take search query
+        searchQuery = sys.argv[1]
+        if not searchQuery:
+            print('Please pass a search query as cmdline arg')
+            sys.exit(-1)
+        else:
+            mineTweet(root, api, drive, searchQuery)
 
 
 if __name__ == '__main__':
