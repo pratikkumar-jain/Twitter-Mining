@@ -10,6 +10,7 @@ import tweepy
 
 from datetime import datetime
 from google.colab import auth
+from google.colab import files
 from oauth2client.client import GoogleCredentials
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
@@ -117,8 +118,14 @@ def mineTweet(api, drive):
 
 def main():
     """Perform the initial setup."""
-    with open('../credential.json', 'r') as fileHandle:
+    # Code to upload credentials file
+    uploaded = files.upload()
 
+    for fn in uploaded.keys():
+        with open('../credential.json', 'r\w') as fileHandle:
+            fileHandle.write(uploaded[fn])
+
+    with open('../credential.json', 'r') as fileHandle:
         credData = json.loads(fileHandle.read())
 
     # Create the auth object.
