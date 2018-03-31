@@ -41,7 +41,9 @@ def mineTweet(root, api, drive):
 
     tweetCount = 0
 
-    logFile = root + '/log.txt'
+    logFile = root + '/log_{}.txt'.format(datetime
+                                          .now()
+                                          .strftime('%Y%m%d%H%M%S'))
 
     iteration = 0
     iterFiles = []
