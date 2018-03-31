@@ -27,8 +27,12 @@ def mineTweet(root, api, drive):
 
     # If results from a specific ID onwards are reqd, set since_id to that ID.
     # else default to no lower limit, go as far back as API allows
-    if
-    sinceId = None
+    if os.path.exists('start_point.txt'):
+        print('Restarting mining')
+        with open('start_point.txt', 'r') as startHandle:
+            sinceId = int(startHandle.read().strip()) + 1
+    else:
+        sinceId = None
 
     # If results only below a specific ID are, set max_id to that ID.
     # else default to no upper limit, start from the most recent tweet matching
@@ -89,6 +93,11 @@ def mineTweet(root, api, drive):
 
                     logHandle.write('{} {} {}\n'
                                     .format(start_id, max_id, len(new_tweets)))
+
+                    # Create start point for next run
+                    if iteration == 0:
+                        with open('start_point.txt', 'w') as startHandle:
+                            startHandle.write(str(start_id))
 
                 except tweepy.TweepError as e:
                     # Just exit if any error
