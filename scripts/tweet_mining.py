@@ -4,13 +4,19 @@
 
 import json
 import jsonpickle
+import os
 import sys
 import tweepy
 
 from datetime import datetime
+from google.colab import auth
+from oauth2client.client import GoogleCredentials
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from zipfile import ZipFile
 
 
-def mineTweet(api):
+def mineTweet(api, drive):
     """Perform the mining operation."""
     searchQuery = 'empire state building'
     maxTweets = float('inf')
@@ -40,6 +46,7 @@ def mineTweet(api):
 
             fileId = datetime.now().strftime('%Y%m%d%H%M%S')
             outputFileName = '../data/tweets_{}.txt'.format(fileId)
+            iterFiles.append(outputFileName)
 
             with open(outputFileName, 'w') as f:
                 try:
@@ -67,7 +74,7 @@ def mineTweet(api):
 
                     for tweet in new_tweets:
                         f.write(jsonpickle.encode(tweet._json,
-                                unpicklable=False) + '\n')
+                                                  unpicklable=False) + '\n')
 
                     tweetCount += len(new_tweets)
 
@@ -85,7 +92,27 @@ def mineTweet(api):
 
             iteration += 1
 
-            if iteration % 20 == 0:
+            if iteration % 5 == 0:
+                zipFile = 'tweet_compressed_{}.zip'.format(
+                    datetime.now().strftime('%Y%m%d%H%M%S'))
+
+                with ZipFile(zipFile, 'w') as zipHandle:
+                    for file in iterFiles:
+                        zipHandle.write(file)
+                        os.remove(file)
+
+                    zipHandle.write('../data/log.txt')
+                    os.remove('../data/log.txt')
+
+                iterFiles = []
+
+                with ZipFile(zipFile, 'rb') as zipHandle:
+                    # 2. Create & upload a file text file.
+                    uploaded = drive.CreateFile({'title': zipFile})
+                    uploaded.SetContentString(zipHandle.read())
+                    uploaded.Upload()
+                    print('Uploaded file with ID {}'
+                          .format(uploaded.get('id')))
 
 
 def main():
@@ -95,16 +122,23 @@ def main():
         credData = json.loads(fileHandle.read())
 
     # Create the auth object.
-    auth = tweepy.AppAuthHandler(credData['API_KEY'], credData['API_SECRET'])
+    authObj = tweepy.AppAuthHandler(credData['API_KEY'],
+                                    credData['API_SECRET'])
 
-    api = tweepy.API(auth, wait_on_rate_limit=True,
+    api = tweepy.API(authObj, wait_on_rate_limit=True,
                      wait_on_rate_limit_notify=True)
 
     if not api:
         print("Authentication Problem")
         sys.exit(-1)
     else:
-        mineTweet(api)
+        # 1. Authenticate and create the PyDrive client.
+        auth.authenticate_user()
+        gauth = GoogleAuth()
+        gauth.credentials = GoogleCredentials.get_application_default()
+        drive = GoogleDrive(gauth)
+        mineTweet(api, drive)
+
 
 if __name__ == '__main__':
     main()
