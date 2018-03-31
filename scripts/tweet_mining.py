@@ -27,6 +27,7 @@ def mineTweet(root, api, drive):
 
     # If results from a specific ID onwards are reqd, set since_id to that ID.
     # else default to no lower limit, go as far back as API allows
+    if
     sinceId = None
 
     # If results only below a specific ID are, set max_id to that ID.
@@ -43,13 +44,12 @@ def mineTweet(root, api, drive):
 
     with open(logFile, 'w') as logHandle:
 
-        logHandle.write('Downloading max {0} tweets\n'.format(maxTweets))
-
         while tweetCount < maxTweets:
 
             fileId = datetime.now().strftime('%Y%m%d%H%M%S%f')
-            outputFileName = root + '/tweets_{}.txt'.format(fileId)
+            outputFileName = root + '/tweets_{}.json'.format(fileId)
             iterFiles.append(outputFileName)
+            lastSearch = False
 
             with open(outputFileName, 'w') as f:
                 try:
@@ -73,6 +73,7 @@ def mineTweet(root, api, drive):
                                                     since_id=sinceId)
                     if not new_tweets:
                         logHandle.write('No more tweets found')
+                        lastSearch = True
                         break
 
                     f.write('[')
@@ -91,14 +92,17 @@ def mineTweet(root, api, drive):
 
                 except tweepy.TweepError as e:
                     # Just exit if any error
-                    print("some error : " + str(e))
+                    print('some error : {}'.format(e))
                     break
 
             iteration += 1
 
-            if iteration % 20 == 0:
-                zipFile = 'tweet_compressed_{}.zip'.format(
+            if iteration % 20 == 0 or lastSearch:
+
+                zipFile = root + '/tweet_compressed_{}.zip'.format(
                     datetime.now().strftime('%Y%m%d%H%M%S'))
+
+                print('Zipping data to {}'.format(zipFile))
 
                 with ZipFile(zipFile, 'w') as zipHandle:
                     for file in iterFiles:
@@ -157,7 +161,7 @@ def main():
                      wait_on_rate_limit_notify=True)
 
     if not api:
-        print("Authentication Problem")
+        print('Authentication Problem')
         sys.exit(-1)
     else:
         # 1. Authenticate and create the PyDrive client.
