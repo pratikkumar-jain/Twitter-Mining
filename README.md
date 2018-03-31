@@ -50,10 +50,19 @@ Run the following command on terminal to clone the repository or optionally you 
 
 STEP 4: Getting Access to Twitter API Credentials
 
-* Open the Twitter Dev Apps website from [here](https://apps.twitter.com/)
-* 
+* If you don't already have a Twitter Account "Create a Twitter Account!" *:|*
+* Open the Twitter Dev Apps website from [here](https://apps.twitter.com/). Click on "Create new App"
+![Create New App](/readme_files/app_home.png)
+* Fill out the required details in the form and click on "Create your Twitter Application"
+![Fill details](/readme_files/app_new.png)
+* Get the API_KEY and API_SECRET from the "Keys and Access Tokens" tab
+![Fill details](/readme_files/app_keys.png)
+* Create a file with name 'credential.json' and paste the following content
 
-
+``{
+  "API_KEY": "YOUR_API_KEY",
+  "API_SECRET": "YOUR_API_SECRET"
+}``
 
 ## Running the code
 
