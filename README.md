@@ -79,9 +79,11 @@ Install Cassandra
 Once your download of Cassandra finishes, move the file to whatever directory you’d like to use for testing Cassandra. Then uncompress the file (whose name will change depending on the version you’re downloading):
 
 ``tar -xzf dsc-cassandra-1.2.2-bin.tar.gz``
+
 Then switch to the new Cassandra bin directory and start up Cassandra:
 
 ``pratikmac:dev pratik$ cd dsc-cassandra-1.2.2/bin``
+
 ``pratikmac:bin pratik$ sudo ./cassandra``
 
 ## Authors
