@@ -1,7 +1,8 @@
 import json
+from sklearn.feature_extraction.text import CountVectorizer
 
 # File Path : Change accordingly
-filename = "/Users/pratik/Downloads/dataset/review.json"
+filename = "D:/Rishabh/Study/NCSU Classes/SE/review.json"
 output_text = []
 
 
@@ -15,3 +16,7 @@ def filereader(line):
 with open(filename, 'r') as f:
     for line in f:
         filereader(line)
+
+vectorizer = CountVectorizer()
+print( vectorizer.fit_transform(output_text).todense() )
+print( vectorizer.vocabulary_ )
