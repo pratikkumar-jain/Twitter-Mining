@@ -70,7 +70,7 @@ STEP 4: Getting Access to Twitter API Credentials
 ## Setting up Cassandra
 
 Install Cassandra database to build the tweets repository
-# Installing Cassandra on MAC :
+### Installing Cassandra on MAC :
 You can also use the curl command on Mac to directly download the files to your machine. For example, to download the DataStax Community Server, you could enter the following at terminal prompt:
 
 ``curl -OL http://downloads.datastax.com/community/dsc.tar.gz``
@@ -86,7 +86,7 @@ Then switch to the new Cassandra bin directory and start up Cassandra:
 
 ``pratikmac:bin pratik$ sudo ./cassandra``
 
-# Installing Cassandra on Windows :
+### Installing Cassandra on Windows :
 Download the windows installer of Cassandra Datastax Community Server and follow the steps given [here](https://www.datastax.com/2012/01/getting-started-with-apache-cassandra-on-windows-the-easy-way) on  the official documentation.
 
 ## Authors
