@@ -9,7 +9,6 @@ import sys
 from zipfile import ZipFile
 from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement
-from cassandra.query import SimpleStatement
 import re
 import datetime
 from cassandra.util import uuid_from_time, datetime_from_uuid1
@@ -31,6 +30,7 @@ def buildDB():
     cluster = Cluster()
     #connect to 'tweet_mining' keyspace
     session = cluster.connect('tweet_mining')
+    #creating dynamic CQL query
     tweet_insert = session.prepare("INSERT INTO tweets (tweet_id, tweet_text, favorite_count, retweet_count) VALUES (?, ?, ?, ?)")
     root="../data/data/"
     #Using a translation table to map everything outside of the BMP (emojis) to the replacement character
@@ -42,18 +42,18 @@ def buildDB():
             filedata =json.load(fileHandle)
             for data in filedata:
                 try:
+                    #filtering non-bmp characters from tweet text
                     tweet_text = str(data.get('text')).translate(non_bmp_map)
                     if data.get('id_str'):
                         batch.add(tweet_insert,(data.get('id_str'),tweet_text,data.get('favorite_count'),data.get('retweet_count')))
                 except:
                     print (sys.exc_info())
+            print("Processing Batch of file : ",file)
             session.execute(batch)
             
-
 def main():
     unzipTweets()
     buildDB()
-
 
 if __name__ == '__main__':
     main()
