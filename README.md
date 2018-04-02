@@ -89,6 +89,14 @@ Then switch to the new Cassandra bin directory and start up Cassandra:
 ### Installing Cassandra on Windows :
 Download the windows installer of Cassandra Datastax Community Server and follow the steps given [here](https://www.datastax.com/2012/01/getting-started-with-apache-cassandra-on-windows-the-easy-way) on  the official documentation.
 
+### Setup Cassandra Driver for Python
+``pip install cassandra-driver``
+
+### Create the keyspace and tweets table schema
+Open the CQL shell
+Execute the command :
+``cqlsh>SOURCE '~/mydir/tweets-schema-cassandra.txt'``
+
 ## Authors
 
 * **Chirag Jain** - *er.chiragjain92@gmail.com* - [github](http://github.com/CJ8664)
