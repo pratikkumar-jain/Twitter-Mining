@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS tweets(
    tweet_text text,
    favorite_count int,
    retweet_count int,
-   created_at timestamp
+   created_at timestamp,
+   lang text
    );
