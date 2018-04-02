@@ -142,7 +142,7 @@ def mineTweet(root, api, drive, searchQuery):
             zipFile = root + '/tweet_compressed_{}.zip'.format(
                 datetime.now().strftime('%Y%m%d%H%M%S'))
 
-            print('Zipping data to {}'.format(zipFile))
+            print('Zipping {} tweet\'s data to {}'.format(tweetCount, zipFile))
 
             with ZipFile(zipFile, 'w') as zipHandle:
                 for file in iterFiles:
@@ -153,9 +153,12 @@ def mineTweet(root, api, drive, searchQuery):
         if lastSearch:
             os.remove(outputFileName)
 
+
 def main():
     """Perform the initial setup."""
-    # Code to upload credentials file
+    if not os.path.exists('../data'):
+        os.mkdir('../data')
+
     colab = False
 
     if colab:
