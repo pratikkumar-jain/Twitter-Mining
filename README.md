@@ -95,7 +95,7 @@ Download the windows installer of Cassandra Datastax Community Server and follow
 ### Create the keyspace and tweets table schema
 Open the CQL shell
 Execute the command :
-``cqlsh>SOURCE '~/mydir/tweets-schema-cassandra.txt'``
+``cqlsh>SOURCE '~/scripts/tweets-schema-cassandra.cql'``
 
 ## Authors
 
