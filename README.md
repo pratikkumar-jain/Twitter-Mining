@@ -81,6 +81,36 @@ STEP 4: Getting Access to Twitter API Credentials
 
 ![Output](/readme_files/output.png)
 
+## Setting up Cassandra
+
+Install Cassandra database to build the tweets repository
+### Installing Cassandra on MAC :
+You can also use the curl command on Mac to directly download the files to your machine. For example, to download the DataStax Community Server, you could enter the following at terminal prompt:
+
+``curl -OL http://downloads.datastax.com/community/dsc.tar.gz``
+
+Install Cassandra
+Once your download of Cassandra finishes, move the file to whatever directory you’d like to use for testing Cassandra. Then uncompress the file (whose name will change depending on the version you’re downloading):
+
+``tar -xzf dsc-cassandra-1.2.2-bin.tar.gz``
+
+Then switch to the new Cassandra bin directory and start up Cassandra:
+
+``pratikmac:dev pratik$ cd dsc-cassandra-1.2.2/bin``
+
+``pratikmac:bin pratik$ sudo ./cassandra``
+
+### Installing Cassandra on Windows :
+Download the windows installer of Cassandra Datastax Community Server and follow the steps given [here](https://www.datastax.com/2012/01/getting-started-with-apache-cassandra-on-windows-the-easy-way) on  the official documentation.
+
+### Setup Cassandra Driver for Python
+``pip install cassandra-driver``
+
+### Create the keyspace and tweets table schema
+Open the CQL shell
+Execute the command :
+``cqlsh>SOURCE '~/scripts/tweets-schema-cassandra.cql'``
+
 ## Authors
 
 * **Chirag Jain** - *er.chiragjain92@gmail.com* - [github](http://github.com/CJ8664)
