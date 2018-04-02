@@ -12,10 +12,15 @@ from cassandra.query import BatchStatement
 import re
 import datetime
 from cassandra.util import uuid_from_time, datetime_from_uuid1
+import shutil
 
 
 def unzipTweets():
     """Unzip the compressed tweets"""
+    if not os.path.exists('../data'):
+        os.mkdir('../data')
+    if not os.path.exists('../data/processed'):
+        os.mkdir('../data/processed')    
     root="../data/"
     for file in os.listdir(root):
         filename = os.fsdecode(file)
@@ -23,6 +28,9 @@ def unzipTweets():
             print("unzipping ",filename)
             with ZipFile(root+filename,"r") as zip_ref:
                 zip_ref.extractall("../data")
+            src = root+filename
+            dest = '../data/processed'
+            shutil.move(src,dest)
     
 def buildDB():
     """Build the database"""
@@ -50,10 +58,14 @@ def buildDB():
                     print (sys.exc_info())
             print("Processing Batch of file : ",file)
             session.execute(batch)
-            
+    shutil.rmtree('../data/data')
+    
 def main():
     unzipTweets()
-    buildDB()
+    if not os.path.exists('../data/data'):
+        print("There are no new tweets to add to the database")
+    else:
+        buildDB()
 
 if __name__ == '__main__':
     main()
