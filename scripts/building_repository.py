@@ -15,18 +15,16 @@ from zipfile import ZipFile
 
 def unzipTweets():
     """Unzip the compressed tweets."""
-    if not os.path.exists('../data'):
-        os.mkdir('../data')
     if not os.path.exists('../data/processed'):
-        os.mkdir('../data/processed')
+        os.makedirs('../data/processed')
     root = '../data/'
     for file in os.listdir(root):
         filename = os.fsdecode(file)
         if filename.endswith('.zip'):
-            print("unzipping ", filename)
-            with ZipFile(root+filename, 'r') as zip_ref:
+            print('Unzipping file: {}'.format(filename))
+            with ZipFile(root + filename, 'r') as zip_ref:
                 zip_ref.extractall('../data')
-            src = root+filename
+            src = root + filename
             dest = '../data/processed'
             shutil.move(src, dest)
 
@@ -41,10 +39,9 @@ def buildDB():
     session = cluster.connect('tweet_mining')
 
     # Creating dynamic CQL query
-    qryText = """INSERT INTO tweets (tweet_id, tweet_text, search_query,
-                                    favorite_count, retweet_count, lang,
-                                    tweet_polarity, tweet_subjectivity)
-                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
+    qryText = None
+    with open('insert_query.sql', 'r') as qryHandle:
+        qryText = qryHandle.read().strip()
 
     tweet_insert = session.prepare(qryText)
     root = '../data/data/'
@@ -54,7 +51,8 @@ def buildDB():
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
     for file in os.listdir(root):
         batch = BatchStatement()
-        with open(root+file, 'r') as fileHandle:
+
+        with open(root + file, 'r') as fileHandle:
             # batch.add(tweet_insert, (name, age))
             filedata = json.load(fileHandle)
             for data in filedata:
@@ -78,10 +76,12 @@ def buildDB():
 def main():
     """Initialize everything."""
     unzipTweets()
+
     if not os.path.exists('../data/data'):
         print("There are no new tweets to add to the database")
     else:
         buildDB()
+
 
 if __name__ == '__main__':
     main()
