@@ -1,46 +1,45 @@
 #!/usr/local/bin/python3
 
-"""Script to build the repository from the extracted tweets"""
+"""Script to build the repository from the extracted tweets."""
 
 import json
-import jsonpickle
 import os
+import shutil
 import sys
-from zipfile import ZipFile
+
+
 from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement
-import re
-import datetime
-from cassandra.util import uuid_from_time, datetime_from_uuid1
-import shutil
+from zipfile import ZipFile
 
 
 def unzipTweets():
-    """Unzip the compressed tweets"""
+    """Unzip the compressed tweets."""
     if not os.path.exists('../data'):
         os.mkdir('../data')
     if not os.path.exists('../data/processed'):
-        os.mkdir('../data/processed')    
-    root="../data/"
+        os.mkdir('../data/processed')
+    root = '../data/'
     for file in os.listdir(root):
         filename = os.fsdecode(file)
-        if filename.endswith(".zip"):
-            print("unzipping ",filename)
-            with ZipFile(root+filename,"r") as zip_ref:
-                zip_ref.extractall("../data")
+        if filename.endswith('.zip'):
+            print("unzipping ", filename)
+            with ZipFile(root+filename, 'r') as zip_ref:
+                zip_ref.extractall('../data')
             src = root+filename
             dest = '../data/processed'
-            shutil.move(src,dest)
-    
+            shutil.move(src, dest)
+
+
 def buildDB():
-    """Build the database"""
-    #create instance of local cassandra cluster
+    """Build the database."""
+    # Create instance of local cassandra cluster
     cluster = Cluster()
-    #connect to 'tweet_mining' keyspace
+    # Connect to 'tweet_mining' keyspace
     session = cluster.connect('tweet_mining')
-    #creating dynamic CQL query
+    # Creating dynamic CQL query
     tweet_insert = session.prepare("INSERT INTO tweets (tweet_id, tweet_text, favorite_count, retweet_count,lang) VALUES (?, ?, ?, ?, ?)")
-    root="../data/data/"
+    root = '../data/data/'
     #Using a translation table to map everything outside of the BMP (emojis) to the replacement character
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
     for file in os.listdir(root):
@@ -59,7 +58,7 @@ def buildDB():
             print("Processing Batch of file : ",file)
             session.execute(batch)
     shutil.rmtree('../data/data')
-    
+
 def main():
     unzipTweets()
     if not os.path.exists('../data/data'):
