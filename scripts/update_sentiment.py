@@ -52,7 +52,7 @@ def main():
 
     for tweetId, tweetText in tweets.values():
         subjectivity, polarity = performSentimentAnalysis(tweetText)
-        batch.add(tweetUpdate, (tweetId, subjectivity, polarity))
+        batch.add(tweetUpdate, (subjectivity, polarity, tweetId))
 
     try:
         print('Processing Batch Update for {} tweets'.format(len(tweets)))
