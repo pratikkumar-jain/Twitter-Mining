@@ -50,17 +50,20 @@ def main():
 
     tweetUpdate = session.prepare(qryText)
 
-    for tweetId, tweetText in tweets.items():
-        subjectivity, polarity = performSentimentAnalysis(tweetText)
-        batch.add(tweetUpdate, (subjectivity, polarity, tweetId))
+    if len(tweets) > 0:
+        for tweetId, tweetText in tweets.items():
+            subjectivity, polarity = performSentimentAnalysis(tweetText)
+            batch.add(tweetUpdate, (subjectivity, polarity, tweetId))
 
-    try:
-        print('Processing Batch Update for {} tweets'.format(len(tweets)))
-        session.execute(batch)
-        print('Update Success')
-    except Exception as exp:
-        print('Exception in updating: {}'.format(exp))
-        print('Update Failed')
+        try:
+            print('Processing Batch Update for {} tweets'.format(len(tweets)))
+            session.execute(batch)
+            print('Update Success')
+        except Exception as exp:
+            print('Exception in updating: {}'.format(exp))
+            print('Update Failed')
+    else:
+        print('No tweets to process')
 
 if __name__ == '__main__':
     main()
