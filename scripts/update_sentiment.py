@@ -22,6 +22,7 @@ def getTweets(session):
     for result in results:
         tweets[result.tweet_id] = result.tweet_text
 
+    print('{} Tweets found'.format(len(tweets)))
     return tweets
 
 
