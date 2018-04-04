@@ -50,7 +50,7 @@ def main():
 
     tweetUpdate = session.prepare(qryText)
 
-    for tweetId, tweetText in tweets.values():
+    for tweetId, tweetText in tweets.items():
         subjectivity, polarity = performSentimentAnalysis(tweetText)
         batch.add(tweetUpdate, (subjectivity, polarity, tweetId))
 
