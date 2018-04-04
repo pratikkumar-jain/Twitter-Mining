@@ -14,7 +14,7 @@ def getTweets(session):
 
     # Creating dynamic CQL query
     qryText = None
-    with open('get_tweets_query.sql', 'r') as qryHandle:
+    with open('get_tweets_query.cql', 'r') as qryHandle:
         qryText = qryHandle.read().strip()
 
     results = session.execute(qryText)
@@ -45,7 +45,7 @@ def main():
 
     batch = BatchStatement()
 
-    with open('update_sentiment_query.sql', 'r') as qryHandle:
+    with open('update_sentiment_query.cql', 'r') as qryHandle:
         qryText = qryHandle.read().strip()
 
     tweetUpdate = session.prepare(qryText)

@@ -40,7 +40,7 @@ def buildDB():
 
     # Creating dynamic CQL query
     qryText = None
-    with open('insert_query.sql', 'r') as qryHandle:
+    with open('insert_query.cql', 'r') as qryHandle:
         qryText = qryHandle.read().strip()
 
     tweet_insert = session.prepare(qryText)
