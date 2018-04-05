@@ -61,28 +61,27 @@ def buildDB():
                     tweet_text = str(data.get('text')).translate(non_bmp_map)
                     if data.get('id_str'):
                         if(data.get('geo')):
-                            coords = str(data.get('geo')['coordinates'][0])+','+str(data.get('geo')['coordinates'][1])
+                            coords = str(data.get('geo')['coordinates'][0])
+                            + ',' + str(data.get('geo')['coordinates'][1])
                         else:
                             coords = 'x,y'
                         if data.get('place'):
                             place = data.get('place')['full_name']
                         else:
                             place = 'place'
-                        batch.add(tweet_insert, (data.get('id_str'),
-                                                 tweet_text,
-                                                 search_query,
-                                                 data.get('favorite_count'),
-                                                 data.get('retweet_count'),
-                                                 data.get('lang'),
-                                                 coords,
-                                                 place,
-                                                 data.get('user').get('id_str'),
-                                                 data.get('user').get('followers_count'),
-                                                 data.get('user').get('friends_count'),
-                                                 data.get('user').get('statuses_count'),
-                                                 data.get('user').get('screen_name'),
-                                                 data.get('user').get('verified'),
-                                                 data.get('user').get('favourites_count')))
+
+                        qryParams = (data.get('id_str'), tweet_text,
+                                     search_query, data.get('favorite_count'),
+                                     data.get('retweet_count'),
+                                     data.get('lang'), coords, place,
+                                     data.get('user').get('id_str'),
+                                     data.get('user').get('followers_count'),
+                                     data.get('user').get('friends_count'),
+                                     data.get('user').get('statuses_count'),
+                                     data.get('user').get('screen_name'),
+                                     data.get('user').get('verified'),
+                                     data.get('user').get('favourites_count'))
+                        batch.add(tweet_insert, qryParams)
                 except Exception as exp:
                     print('Error: {}'.format(exp))
                     print(sys.exc_info())
