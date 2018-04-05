@@ -50,7 +50,7 @@ def buildDB():
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
     for file in os.listdir(root):
         batch = BatchStatement()
-        search_query = "from filename"
+        search_query = file.split('-')[0]
         tweet_insert = session.prepare(qryText)
         with open(root + file, 'r') as fileHandle:
             # batch.add(tweet_insert, (name, age))

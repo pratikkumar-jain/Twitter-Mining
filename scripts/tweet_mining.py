@@ -53,7 +53,8 @@ def mineTweet(root, api, drive, searchQuery):
         while tweetCount < maxTweets:
 
             fileId = datetime.now().strftime('%Y%m%d%H%M%S%f')
-            outputFileName = root + '/tweets_{}.json'.format(fileId)
+            sQry = searchQuery.replace(' ', '_')
+            outputFileName = root + '/{}-tweets_{}.json'.format(sQry, fileId)
 
             lastSearch = False
 
