@@ -43,7 +43,6 @@ def buildDB():
     with open('insert_query.cql', 'r') as qryHandle:
         qryText = qryHandle.read().strip()
 
-    tweet_insert = session.prepare(qryText)
     root = '../data/data/'
 
     # Using a translation table to map everything outside of the BMP (emojis)
@@ -51,7 +50,8 @@ def buildDB():
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
     for file in os.listdir(root):
         batch = BatchStatement()
-
+        search_query = "from filename"
+        tweet_insert = session.prepare(qryText)
         with open(root + file, 'r') as fileHandle:
             # batch.add(tweet_insert, (name, age))
             filedata = json.load(fileHandle)
@@ -60,11 +60,29 @@ def buildDB():
                     # Filtering non-bmp characters from tweet text
                     tweet_text = str(data.get('text')).translate(non_bmp_map)
                     if data.get('id_str'):
+                        if(data.get('geo')):
+                            coords = str(data.get('geo')['coordinates'][0])+','+str(data.get('geo')['coordinates'][1])
+                        else:
+                            coords = 'x,y'
+                        if data.get('place'):
+                            place = data.get('place')['full_name']
+                        else:
+                            place = 'place'
                         batch.add(tweet_insert, (data.get('id_str'),
                                                  tweet_text,
+                                                 search_query,
                                                  data.get('favorite_count'),
                                                  data.get('retweet_count'),
-                                                 data.get('lang')))
+                                                 data.get('lang'),
+                                                 coords,
+                                                 place,
+                                                 data.get('user').get('id_str'),
+                                                 data.get('user').get('followers_count'),
+                                                 data.get('user').get('friends_count'),
+                                                 data.get('user').get('statuses_count'),
+                                                 data.get('user').get('screen_name'),
+                                                 data.get('user').get('verified'),
+                                                 data.get('user').get('favourites_count')))
                 except Exception as exp:
                     print('Error: {}'.format(exp))
                     print(sys.exc_info())
