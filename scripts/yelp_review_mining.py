@@ -29,7 +29,7 @@ count = 0
 with open(filename, 'r') as f:
     for line in f:
         count += 1
-        if count < 10000:
+        if count < 1000000:
             filereader(line)
         else:
             break
