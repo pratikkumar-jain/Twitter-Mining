@@ -43,7 +43,7 @@ output_text2 = []
 for reviews in output_text:
     filtered_words = []
     for word in tokenizer.tokenize(reviews):
-        if d.check(word):
+        if d.check(word) and not word.isdigit():
             lemmatizer.lemmatize(word)
             filtered_words.append(word.lower())
     output_text2.append(' '.join(filtered_words))
