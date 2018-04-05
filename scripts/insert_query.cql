@@ -1,0 +1,18 @@
+INSERT INTO tweets (tweet_id, 
+					tweet_text,
+					search_query,
+                    favorite_count, 
+					retweet_count, 
+					lang,
+					geo,
+					place,
+					user_id,
+					user_followers_count,
+					user_friends_count,
+					user_statuses_count,
+					user_screen_name,
+					user_verified,
+					user_favourites_count,
+                    tweet_polarity, 
+					tweet_subjectivity)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, -10, -10)
