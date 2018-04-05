@@ -7,8 +7,17 @@ CREATE TABLE IF NOT EXISTS tweets(
  search_query text,
  favorite_count int,
  retweet_count int,
- created_at timestamp,
+ created_at text,
  lang text,
+ geo text,
+ place text,
+ user_id text,
+ user_followers_count int,
+ user_friends_count int,
+ user_statuses_count int,
+ user_screen_name text,
+ user_verified boolean,
+ user_favourites_count int,
  tweet_polarity float,
  tweet_subjectivity float
 );
