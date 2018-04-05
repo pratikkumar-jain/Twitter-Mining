@@ -1,9 +1,11 @@
 import enchant
 import json
+import pandas as pd
 
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import RegexpTokenizer, sent_tokenize
+from nltk.tokenize import RegexpTokenizer
+from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import CountVectorizer
 
 # File Path : Change accordingly
@@ -60,4 +62,5 @@ dict_vocab = {}
 for i in range(len(names)):
     dict_vocab[names[i]] = count[0][i]
 
-print(dict_vocab)
+df = pd.DataFrame(list(dict_vocab.items()), columns=['Word', 'Count'])
+print(df)
