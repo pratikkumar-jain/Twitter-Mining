@@ -3,7 +3,7 @@ import json
 
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import RegexpTokenizer
+from nltk.tokenize import RegexpTokenizer, sent_tokenize
 from sklearn.feature_extraction.text import CountVectorizer
 
 # File Path : Change accordingly
@@ -27,7 +27,7 @@ count = 0
 with open(filename, 'r') as f:
     for line in f:
         count += 1
-        if count < 10000:
+        if count < 100000:
             filereader(line)
         else:
             break
@@ -43,10 +43,21 @@ for reviews in output_text:
     for word in tokenizer.tokenize(reviews):
         if d.check(word):
             lemmatizer.lemmatize(word)
-            filtered_words.append(word)
+            filtered_words.append(word.lower())
     output_text2.append(' '.join(filtered_words))
+
+review_document = [' '.join(output_text2)]
 
 # function to create Bag of Words by removing stop words
 vectorizer = CountVectorizer(stop_words='english')
-vectorizer.fit_transform(output_text2).todense()
-print(vectorizer.vocabulary_)
+vectorizer.fit_transform(review_document)
+names = list(vectorizer.get_feature_names())
+count = (vectorizer.transform(review_document).toarray()).tolist()
+
+# creating a dictionary of words in the document and the count of that word
+dict_vocab = {}
+
+for i in range(len(names)):
+    dict_vocab[names[i]] = count[0][i]
+
+print(dict_vocab)
