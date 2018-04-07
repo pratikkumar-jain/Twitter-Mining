@@ -157,9 +157,6 @@ def mineTweet(root, api, drive, searchQuery):
 
 def main():
     """Perform the initial setup."""
-    if not os.path.exists('../data'):
-        os.mkdir('../data')
-
     colab = False
 
     if colab:
@@ -184,6 +181,8 @@ def main():
         root = 'data'
     else:
         root = '../data'
+        if not os.path.exists(root):
+            os.mkdir(root)
         drive = None
 
     with open('../credential.json', 'r') as fileHandle:
