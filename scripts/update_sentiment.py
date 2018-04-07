@@ -33,6 +33,17 @@ def performSentimentAnalysis(tweetText):
     return blob.sentiment.subjectivity, blob.sentiment.polarity
 
 
+def batchUpdate(batch, session, startId, endId, counter):
+    """Update sentiment in batches."""
+    try:
+        print('Processing Batch of {} {} {}'.format(
+            counter, startId, endId), end=', ')
+        session.execute(batch)
+        print('Update Success')
+    except Exception as exp:
+        print('Exception in updating: {}, Update Failed'.format(exp))
+
+
 def main():
     """Initialize everything."""
     # Create instance of local cassandra cluster
@@ -43,27 +54,35 @@ def main():
 
     tweets = getTweets(session)
 
-    batch = BatchStatement()
-
     with open('update_sentiment_query.cql', 'r') as qryHandle:
         qryText = qryHandle.read().strip()
 
     tweetUpdate = session.prepare(qryText)
 
+    counter = 0
+    processed = 0
+    batchSize = 500
+
     if len(tweets) > 0:
         for tweetId, tweetText in tweets.items():
+
+            if counter == 0:
+                startId = tweetId
+                batch = BatchStatement()
+
             subjectivity, polarity = performSentimentAnalysis(tweetText)
             batch.add(tweetUpdate, (subjectivity, polarity, tweetId))
+            processed += 1
+            counter += 1
 
-        try:
-            print('Processing Batch Update for {} tweets'.format(len(tweets)))
-            session.execute(batch)
-            print('Update Success')
-        except Exception as exp:
-            print('Exception in updating: {}'.format(exp))
-            print('Update Failed')
+            if counter % batchSize == 0 or processed == len(tweets):
+                endId = tweetId
+                batchUpdate(batch, session, startId, endId, counter)
+                counter = 0
+
     else:
         print('No tweets to process')
+
 
 if __name__ == '__main__':
     main()
