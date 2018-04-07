@@ -67,20 +67,6 @@ STEP 4: Getting Access to Twitter API Credentials
     "API_SECRET": "YOUR_API_SECRET"
   }``
 
-## Running the code
-
-* Change the working directory to
-
-  ``... Twitter-Mining/scripts``
-
-* Now being in scripts folder run the following command on terminal
-
-  ``python3 tweet_mining.py "LOCATION_OR_THING_YOU_WANT_TWEETS_FOR"``
-
-* All the data will be extracted in json format containing the metadata mentioned [here](https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets#example-response). These json files are zipped together to save disk space and moved into 'data' folder
-
-![Output](/readme_files/output.png)
-
 ## Setting up Cassandra
 
 Install Cassandra database to build the tweets repository
@@ -110,6 +96,32 @@ Download the windows installer of Cassandra Datastax Community Server and follow
 Open the CQL shell
 Execute the command :
 ``cqlsh>SOURCE '~/scripts/tweets-schema-cassandra.cql'``
+
+## Running the code
+
+### Extracting data
+
+* Change the working directory to
+
+  ``... Twitter-Mining/scripts``
+
+* Now being in scripts folder run the following command on terminal
+
+  ``python3 tweet_mining.py "LOCATION_OR_THING_YOU_WANT_TWEETS_FOR"``
+
+* All the data will be extracted in json format containing the metadata mentioned [here](https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets#example-response). These json files are zipped together to save disk space and moved into 'data' folder
+
+![Output](/readme_files/output.png)
+
+### Loading data into database
+
+* Change the working directory to
+
+  ``... Twitter-Mining/scripts``
+
+* Now being in scripts folder run the following command on terminal
+
+  ``python3 building_repository.py``
 
 ## Authors
 
