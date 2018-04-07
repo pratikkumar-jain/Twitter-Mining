@@ -35,6 +35,13 @@ def calculateSupportIndex(tweetObj):
 
     return support_index
 
+def calculateNormalizedSupportIndex(maxSupport, minSupport, tweetObj):
+
+    support_index = tweetObj.support_index if tweetObj.support_index != 0 else 0
+    normalized_support_index = 100 * (support_index - minSupport) / (maxSupport - minSupport)
+
+    return normalized_support_index
+
 def batchUpdate(batch, session, startId, endId, counter):
     """Update sentiment in batches."""
     try:
@@ -86,6 +93,34 @@ def main():
 
     else:
         print('No tweets to process')
+
+    # Reset counter for normalizing tweets
+    max_support_result = session.execute('select max(support_index) as max_support from tweets;')
+    max_support = max_support_result.current_rows[0].max_support
+    min_support_result = session.execute('select min(support_index) as min_support from tweets;')
+    min_support = min_support_result.current_rows[0].min_support
+
+    qryText = qryText.replace('support_index', 'normalized_support_index')
+    tweetUpdate = session.prepare(qryText)
+
+    counter = 0
+    for tweetId, tweetObj in tweets.items():
+
+        if counter == 0:
+            startId = tweetId
+            batch = BatchStatement()
+
+        normalized_si_value = calculateNormalizedSupportIndex(max_support, min_support, tweetObj)
+
+        # batch.add(tweetUpdate, (si_value, tweetId))
+        batch.add(tweetUpdate, (normalized_si_value, tweetId))
+        processed += 1
+        counter += 1
+
+        if counter % batchSize == 0 or processed == len(tweets):
+            endId = tweetId
+            batchUpdate(batch, session, startId, endId, counter)
+            counter = 0
 
 if __name__ == '__main__':
     main()
