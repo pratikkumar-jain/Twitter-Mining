@@ -9,7 +9,8 @@ from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import CountVectorizer
 
 # File Path : Change accordingly
-filename = "/Users/pratik/Downloads/dataset/review.json"
+# filename = "/Users/pratik/Downloads/dataset/review.json"
+filename = "/Users/nirav/workspaces/Twitter-Mining/dataset/review.json"
 output_text = []
 
 lemmatizer = WordNetLemmatizer()
@@ -17,28 +18,28 @@ lemmatizer = WordNetLemmatizer()
 # function to read a review and append it to the list
 # if it is useful
 
-
 def filereader(line):
     review_line = json.loads(line)
     if review_line['useful'] > 0:
         out = review_line['text'].replace('\n', '')
         output_text.append(out)
 
-
 count = 0
 with open(filename, 'r') as f:
     for line in f:
         count += 1
-        if count < 1000000:
+        if count < 50000:
             filereader(line)
         else:
             break
+
+print("File read!")
 
 tokenizer = RegexpTokenizer(r'\w+')
 
 # package to check if a word is in Dictionary
 d = enchant.Dict("en_US")
-
+print(output_text)
 output_text2 = []
 for reviews in output_text:
     filtered_words = []
@@ -47,6 +48,8 @@ for reviews in output_text:
             lemmatizer.lemmatize(word)
             filtered_words.append(word.lower())
     output_text2.append(' '.join(filtered_words))
+
+print("Words filtered!")
 
 review_document = [' '.join(output_text2)]
 
