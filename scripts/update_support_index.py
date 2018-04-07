@@ -82,7 +82,6 @@ def main():
             si_value = calculateSupportIndex(tweetObj)
 
             batch.add(tweetUpdate, (si_value, tweetId))
-            # batch.add(tweetUpdate, ('normalized_support_index', si_value, tweetId))
             processed += 1
             counter += 1
 
@@ -112,7 +111,6 @@ def main():
 
         normalized_si_value = calculateNormalizedSupportIndex(max_support, min_support, tweetObj)
 
-        # batch.add(tweetUpdate, (si_value, tweetId))
         batch.add(tweetUpdate, (normalized_si_value, tweetId))
         processed += 1
         counter += 1
