@@ -49,6 +49,8 @@ def buildDB():
     # to the replacement character
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), 0xfffd)
     for file in os.listdir(root):
+        if not file.endswith('.json'):
+            continue
         batch = BatchStatement()
         search_query = file.split('-')[0]
         tweet_insert = session.prepare(qryText)
@@ -61,8 +63,9 @@ def buildDB():
                     tweet_text = str(data.get('text')).translate(non_bmp_map)
                     if data.get('id_str'):
                         if(data.get('geo')):
-                            coords = str(data.get('geo')['coordinates'][0])
-                            + ',' + str(data.get('geo')['coordinates'][1])
+                            lat = str(data.get('geo')['coordinates'][0])
+                            long = str(data.get('geo')['coordinates'][1])
+                            coords = lat + ',' + long
                         else:
                             coords = 'x,y'
                         if data.get('place'):
