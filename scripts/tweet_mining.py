@@ -53,7 +53,8 @@ def mineTweet(root, api, drive, searchQuery):
         while tweetCount < maxTweets:
 
             fileId = datetime.now().strftime('%Y%m%d%H%M%S%f')
-            outputFileName = root + '/tweets_{}.json'.format(fileId)
+            sQry = searchQuery.replace(' ', '_')
+            outputFileName = root + '/{}-tweets_{}.json'.format(sQry, fileId)
 
             lastSearch = False
 
@@ -142,7 +143,7 @@ def mineTweet(root, api, drive, searchQuery):
             zipFile = root + '/tweet_compressed_{}.zip'.format(
                 datetime.now().strftime('%Y%m%d%H%M%S'))
 
-            print('Zipping data to {}'.format(zipFile))
+            print('Zipping {} tweet\'s data to {}'.format(tweetCount, zipFile))
 
             with ZipFile(zipFile, 'w') as zipHandle:
                 for file in iterFiles:
@@ -153,9 +154,9 @@ def mineTweet(root, api, drive, searchQuery):
         if lastSearch:
             os.remove(outputFileName)
 
+
 def main():
     """Perform the initial setup."""
-    # Code to upload credentials file
     colab = False
 
     if colab:
@@ -180,6 +181,8 @@ def main():
         root = 'data'
     else:
         root = '../data'
+        if not os.path.exists(root):
+            os.mkdir(root)
         drive = None
 
     with open('../credential.json', 'r') as fileHandle:

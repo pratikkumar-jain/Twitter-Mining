@@ -52,21 +52,21 @@ STEP 4: Getting Access to Twitter API Credentials
 
 * If you don't already have a Twitter Account "Create a Twitter Account!" *:|*
 * Open the Twitter Dev Apps website from [here](https://apps.twitter.com/). Click on "Create new App"
+
 ![Create New App](/readme_files/app_home.png)
 * Fill out the required details in the form and click on "Create your Twitter Application"
+
 ![Fill details](/readme_files/app_new.png)
 * Get the API_KEY and API_SECRET from the "Keys and Access Tokens" tab
+
 ![Fill details](/readme_files/app_keys.png)
 * Create a file with name 'credential.json' and paste the following content
 
-``{
-  "API_KEY": "YOUR_API_KEY",
-  "API_SECRET": "YOUR_API_SECRET"
-}``
+  ``{
+    "API_KEY": "YOUR_API_KEY",
+    "API_SECRET": "YOUR_API_SECRET"
+  }``
 
-## Running the code
-
-``  ``
 ## Setting up Cassandra
 
 Install Cassandra database to build the tweets repository
@@ -96,6 +96,32 @@ Download the windows installer of Cassandra Datastax Community Server and follow
 Open the CQL shell
 Execute the command :
 ``cqlsh>SOURCE '~/scripts/tweets-schema-cassandra.cql'``
+
+## Running the code
+
+### Extracting data
+
+* Change the working directory to
+
+  ``... Twitter-Mining/scripts``
+
+* Now being in scripts folder run the following command on terminal
+
+  ``python3 tweet_mining.py "LOCATION_OR_THING_YOU_WANT_TWEETS_FOR"``
+
+* All the data will be extracted in json format containing the metadata mentioned [here](https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets#example-response). These json files are zipped together to save disk space and moved into 'data' folder
+
+![Output](/readme_files/output.png)
+
+### Loading data into database
+
+* Change the working directory to
+
+  ``... Twitter-Mining/scripts``
+
+* Now being in scripts folder run the following command on terminal
+
+  ``python3 building_repository.py``
 
 ## Authors
 
