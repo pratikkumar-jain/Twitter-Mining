@@ -97,6 +97,14 @@ Open the CQL shell
 Execute the command :
 ``cqlsh>SOURCE '~/scripts/tweets-schema-cassandra.cql'``
 
+## Creating Bag of Words (Yelp Reviews)
+
+ The dataset used for creating Bag of Words of Yelp reviews is available of the Yelp Website.
+
+## Download the Dataset
+
+To download the Yelp dataset, click [here](https://www.yelp.com/dataset). The dataset is available in two formats: JSON and SQL. The format of the dataset used here is [JSON](https://www.json.org).
+
 ## Running the code
 
 ### Extracting data
