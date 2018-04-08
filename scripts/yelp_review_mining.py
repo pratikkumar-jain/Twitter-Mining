@@ -95,11 +95,16 @@ def create_bag_of_words(documents):
     df['normalized_count'] = (df['count'] - min_count) / (max_count - min_count)
 
     bag_of_words = df.loc[df['normalized_count'] >= 0.1]
-    print(bag_of_words)
+    # print(bag_of_words)
+    print("bag_of_words created!")
     return bag_of_words
 
-if __name__ == '__main__':
+def main():
     file_name = "/Users/nirav/workspaces/Twitter-Mining/dataset/review.json"
-    reviews = generate_document(file_name, max_reviews = 1000)
-    filtered_document = filter_documents(reviews)
-    create_bag_of_words(filtered_document)
+    reviews = generate_document(file_name, max_reviews = 50000)
+    filtered_documents = filter_documents(reviews)
+    bag_of_review_words = create_bag_of_words(filtered_documents)
+    bag_of_review_words.to_pickle("yelp_bag_of_review_words.pkl")
+
+if __name__ == '__main__':
+    main()
