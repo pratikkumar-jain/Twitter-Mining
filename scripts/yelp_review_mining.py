@@ -1,69 +1,99 @@
 import enchant
 import json
 import pandas as pd
-
+import numpy as np
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
 from nltk.tokenize import sent_tokenize
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+import pdb
 
-# File Path : Change accordingly
-# filename = "/Users/pratik/Downloads/dataset/review.json"
-filename = "/Users/nirav/workspaces/Twitter-Mining/dataset/review.json"
-output_text = []
+def generate_document(filename, max_reviews = 50000, savepath = None):
+    lemmatizer = WordNetLemmatizer()
 
-lemmatizer = WordNetLemmatizer()
 
-# function to read a review and append it to the list
-# if it is useful
+    review_doc = []
+    output_text = []
 
-def filereader(line):
-    review_line = json.loads(line)
-    if review_line['useful'] > 0:
-        out = review_line['text'].replace('\n', '')
-        output_text.append(out)
+    def filereader(line):
+        review_line = json.loads(line)
+        # Only take 'useful' reviews
+        if review_line['useful'] > 0:
+            out = review_line['text'].replace('\n', '')
+            output_text.append(out)
 
-count = 0
-with open(filename, 'r') as f:
-    for line in f:
-        count += 1
-        if count < 50000:
-            filereader(line)
-        else:
-            break
+    count = 0
+    with open(filename, 'r') as f:
+        for line in f:
+            count += 1
+            if count < max_reviews:
+                filereader(line)
+            else:
+                break
 
-print("File read!")
+    print("File read!")
 
-tokenizer = RegexpTokenizer(r'\w+')
+    tokenizer = RegexpTokenizer(r'\w+')
 
-# package to check if a word is in Dictionary
-d = enchant.Dict("en_US")
-print(output_text)
-output_text2 = []
-for reviews in output_text:
-    filtered_words = []
-    for word in tokenizer.tokenize(reviews):
-        if d.check(word) and not word.isdigit():
-            lemmatizer.lemmatize(word)
-            filtered_words.append(word.lower())
-    output_text2.append(' '.join(filtered_words))
+    # package to check if a word is in Dictionary
+    english_dict = enchant.Dict("en_US")
 
-print("Words filtered!")
+    output_text2 = []
+    filtered_vocab = []
+    for reviews in output_text:
+        filtered_words = []
+        for word in tokenizer.tokenize(reviews):
+            if english_dict.check(word) and not word.isdigit():
+                lemmatizer.lemmatize(word)
+                filtered_words.append(word.lower())
+        filtered_vocab.extend(filtered_words)
+        output_text2.append(' '.join(filtered_words))
 
-review_document = [' '.join(output_text2)]
+    ## Slightly optimized function to get filtered vocab. Do not delete.
+    # new_filtered_vocab = []
+    # for word in tokenizer.tokenize(' '.join(output_text)):
+    #         if d.check(word) and not word.isdigit():
+    #             lemmatizer.lemmatize(word)
+    #             new_filtered_vocab.append(word.lower())
 
-# function to create Bag of Words by removing stop words
-vectorizer = CountVectorizer(stop_words='english')
-vectorizer.fit_transform(review_document)
-names = list(vectorizer.get_feature_names())
-count = (vectorizer.transform(review_document).toarray()).tolist()
+    print("Words filtered!")
 
-# creating a dictionary of words in the document and the count of that word
-dict_vocab = {}
+    # Filtered review documents
+    review_document = [' '.join(output_text2)]
 
-for i in range(len(names)):
-    dict_vocab[names[i]] = count[0][i]
+    return review_document
+    # Save here
 
-df = pd.DataFrame(list(dict_vocab.items()), columns=['Word', 'Count'])
-print(df)
+def create_bag_of_words(documents):
+
+    # function to create Bag of Words by removing stop words
+    # We should not use tf-idf, only count
+    # vectorizer = TfidfVectorizer(min_df=5, max_df = 0.8, sublinear_tf=True, use_idf =True, stop_words = 'english')
+    # train_corpus_tf_idf = vectorizer.fit_transform(documents)
+    # test_corpus_tf_idf = vectorizer.transform(X_test)
+
+    vectorizer = CountVectorizer(stop_words='english')
+    train_corpus_tf_idf = vectorizer.fit_transform(documents)
+    names = list(vectorizer.get_feature_names())
+    count = (vectorizer.transform(documents).toarray()).tolist()
+
+    feature_array = np.array(vectorizer.get_feature_names())
+    tfidf_sorting = np.argsort(train_corpus_tf_idf.toarray()).flatten()[::-1]
+
+    # n = 50
+    # top_n = feature_array[tfidf_sorting][:n]
+    # print("top: ", top_n)
+    # creating a dictionary of words in the document and the count of that word
+    dict_vocab = {}
+
+    for i in range(len(names)):
+        dict_vocab[names[i]] = count[0][i]
+
+    df = pd.DataFrame(list(dict_vocab.items()), columns=['Word', 'Count'])
+    print(df)
+
+if __name__ == '__main__':
+    file_name = "/Users/nirav/workspaces/Twitter-Mining/dataset/review.json"
+    filtered_document = generate_document(file_name, max_reviews = 5000)
+    create_bag_of_words(filtered_document)
