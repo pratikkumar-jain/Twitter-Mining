@@ -8,6 +8,7 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 import pdb
+import pickle
 
 def filter_documents(docs):
     # package to check if a word is in Dictionary
@@ -84,8 +85,14 @@ def create_bag_of_words(documents):
     # creating a dictionary of words in the document and the count of that word
     dict_vocab = {}
 
+    with open('saved_bag_of_words.pickle', 'rb') as fp:
+            dict_vocab = pickle.load(fp)
+
     for i in range(len(names)):
         dict_vocab[names[i]] = count[0][i]
+
+    with open('saved_bag_of_words.pickle','wb') as fp:
+        pickle.dump(dict_vocab, fp)
 
     df = pd.DataFrame(list(dict_vocab.items()), columns=['word', 'count'])
 
