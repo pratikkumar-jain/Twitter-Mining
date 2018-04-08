@@ -74,12 +74,12 @@ def create_bag_of_words(documents):
     # test_corpus_tf_idf = vectorizer.transform(X_test)
 
     vectorizer = CountVectorizer(stop_words='english')
-    train_corpus_tf_idf = vectorizer.fit_transform(documents)
+    train_corpus = vectorizer.fit_transform(documents)
     names = list(vectorizer.get_feature_names())
-    count = (vectorizer.transform(documents).toarray()).tolist()
+    count = (train_corpus.toarray()).tolist()
 
-    feature_array = np.array(vectorizer.get_feature_names())
-    tfidf_sorting = np.argsort(train_corpus_tf_idf.toarray()).flatten()[::-1]
+    # feature_array = np.array(vectorizer.get_feature_names())
+    # tfidf_sorting = np.argsort(train_corpus_tf_idf.toarray()).flatten()[::-1]
 
     # n = 50
     # top_n = feature_array[tfidf_sorting][:n]
@@ -90,10 +90,19 @@ def create_bag_of_words(documents):
     for i in range(len(names)):
         dict_vocab[names[i]] = count[0][i]
 
-    df = pd.DataFrame(list(dict_vocab.items()), columns=['Word', 'Count'])
-    print(df)
+    df = pd.DataFrame(list(dict_vocab.items()), columns=['word', 'count'])
+    
+    # Normalize count
+    max_count = df['count'].max()
+    min_count = df['count'].min()
+    df['normalized_count'] = (df['count'] - min_count) / (max_count - min_count)
+
+    bag_of_words = df.loc[df['normalized_count'] >= 0.1]
+    print(bag_of_words)
+
+    return bag_of_words
 
 if __name__ == '__main__':
     file_name = "/Users/nirav/workspaces/Twitter-Mining/dataset/review.json"
-    filtered_document = generate_document(file_name, max_reviews = 5000)
+    filtered_document = generate_document(file_name, max_reviews = 10000)
     create_bag_of_words(filtered_document)
