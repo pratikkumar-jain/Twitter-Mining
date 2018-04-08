@@ -62,7 +62,7 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
     # Filtered review documents
     review_document = [' '.join(output_text2)]
 
-    return review_document
+    return output_text2
     # Save here
 
 def create_bag_of_words(documents):
@@ -91,7 +91,7 @@ def create_bag_of_words(documents):
         dict_vocab[names[i]] = count[0][i]
 
     df = pd.DataFrame(list(dict_vocab.items()), columns=['word', 'count'])
-    
+
     # Normalize count
     max_count = df['count'].max()
     min_count = df['count'].min()
