@@ -50,6 +50,7 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
             out = review_line['text'].replace('\n', '')
             output_text.append(out)
 
+    completed = 0
     count = 0
     with open(filename, 'r') as f:
         for line in f:
@@ -58,6 +59,11 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
                 filereader(line)
             else:
                 break
+
+    completed += count
+    # print(completed)
+    with open('completed_lines.pickle', 'wb') as fp:
+        pickle.dump(completed, fp)
 
     print("File read!")
     return output_text
@@ -84,7 +90,7 @@ def create_bag_of_words(documents):
     # top_n = feature_array[tfidf_sorting][:n]
     # print("top: ", top_n)
     # creating a dictionary of words in the document and the count of that word
-    
+
     if not os.path.exists('saved_bag_of_words.pickle'):
         # print("YES")
         dict_vocab = {}
