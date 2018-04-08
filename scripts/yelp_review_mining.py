@@ -9,9 +9,34 @@ from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 import pdb
 
-def generate_document(filename, max_reviews = 50000, savepath = None):
+def filter_documents(docs):
+    # package to check if a word is in Dictionary
+    english_dict = enchant.Dict("en_US")
+    tokenizer = RegexpTokenizer(r'\w+')
     lemmatizer = WordNetLemmatizer()
 
+    output_text2 = []
+    filtered_vocab = []
+    for reviews in docs:
+        filtered_words = []
+        for word in tokenizer.tokenize(reviews):
+            if english_dict.check(word) and not word.isdigit():
+                lemmatizer.lemmatize(word)
+                filtered_words.append(word.lower())
+        filtered_vocab.extend(filtered_words)
+        output_text2.append(' '.join(filtered_words))
+
+    ## Slightly optimized function to get filtered vocab. Do not delete.
+    # new_filtered_vocab = []
+    # for word in tokenizer.tokenize(' '.join(output_text)):
+    #         if d.check(word) and not word.isdigit():
+    #             lemmatizer.lemmatize(word)
+    #             new_filtered_vocab.append(word.lower())
+
+    print("Words filtered!")
+    return [' '.join(output_text2)]
+
+def generate_document(filename, max_reviews = 50000, savepath = None):
 
     review_doc = []
     output_text = []
@@ -33,37 +58,9 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
                 break
 
     print("File read!")
+    return output_text
 
-    tokenizer = RegexpTokenizer(r'\w+')
-
-    # package to check if a word is in Dictionary
-    english_dict = enchant.Dict("en_US")
-
-    output_text2 = []
-    filtered_vocab = []
-    for reviews in output_text:
-        filtered_words = []
-        for word in tokenizer.tokenize(reviews):
-            if english_dict.check(word) and not word.isdigit():
-                lemmatizer.lemmatize(word)
-                filtered_words.append(word.lower())
-        filtered_vocab.extend(filtered_words)
-        output_text2.append(' '.join(filtered_words))
-
-    ## Slightly optimized function to get filtered vocab. Do not delete.
-    # new_filtered_vocab = []
-    # for word in tokenizer.tokenize(' '.join(output_text)):
-    #         if d.check(word) and not word.isdigit():
-    #             lemmatizer.lemmatize(word)
-    #             new_filtered_vocab.append(word.lower())
-
-    print("Words filtered!")
-
-    # Filtered review documents
-    review_document = [' '.join(output_text2)]
-
-    return output_text2
-    # Save here
+    # TODO: Save filtered documents
 
 def create_bag_of_words(documents):
 
@@ -99,10 +96,10 @@ def create_bag_of_words(documents):
 
     bag_of_words = df.loc[df['normalized_count'] >= 0.1]
     print(bag_of_words)
-
     return bag_of_words
 
 if __name__ == '__main__':
     file_name = "/Users/nirav/workspaces/Twitter-Mining/dataset/review.json"
-    filtered_document = generate_document(file_name, max_reviews = 10000)
+    reviews = generate_document(file_name, max_reviews = 1000)
+    filtered_document = filter_documents(reviews)
     create_bag_of_words(filtered_document)
