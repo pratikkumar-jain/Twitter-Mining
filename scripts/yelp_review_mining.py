@@ -53,12 +53,14 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
     completed = 0
     count = 0
     with open(filename, 'r') as f:
-        for line in f:
-            count += 1
-            if count < max_reviews:
-                filereader(line)
-            else:
-                break
+        for i, line in enumerate(f):
+            if i > completed:
+                count += 1
+                # print(i)
+                if count < max_reviews:
+                    filereader(line)
+                else:
+                    break
 
     completed += count
     # print(completed)
