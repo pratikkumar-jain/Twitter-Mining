@@ -50,10 +50,12 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
             out = review_line['text'].replace('\n', '')
             output_text.append(out)
 
-    completed = 0
-    with open('count.pickle', 'rb') as fp:
+    if not os.path.exists('completed_lines.pickle'):
+        completed = 0
+    else:
+        with open('completed_lines.pickle', 'rb') as fp:
             completed = pickle.load(fp)
-            
+
     count = 0
     with open(filename, 'r') as f:
         for i, line in enumerate(f):
@@ -66,7 +68,7 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
                     break
 
     completed += count
-    # print(completed)
+    print('Reviews Read: {}'.format(completed))
     with open('completed_lines.pickle', 'wb') as fp:
         pickle.dump(completed, fp)
 
@@ -97,17 +99,19 @@ def create_bag_of_words(documents):
     # creating a dictionary of words in the document and the count of that word
 
     if not os.path.exists('saved_bag_of_words.pickle'):
-        # print("YES")
+        # print("Not Present")
         dict_vocab = {}
     else:
         with open('saved_bag_of_words.pickle', 'rb') as fp:
             dict_vocab = pickle.load(fp)
+    # print(dict_vocab)
 
     for i in range(len(names)):
         if names[i] in dict_vocab:
             dict_vocab[names[i]] += count[0][i]
         else:
             dict_vocab[names[i]] = count[0][i]
+    # print(dict_vocab)
 
     with open('saved_bag_of_words.pickle','wb') as fp:
         pickle.dump(dict_vocab, fp)
@@ -125,8 +129,8 @@ def create_bag_of_words(documents):
     return bag_of_words
 
 def main():
-    file_name = "/Users/nirav/workspaces/Twitter-Mining/dataset/review.json"
-    reviews = generate_document(file_name, max_reviews = 50000)
+    file_name = "/Users/pratik/Downloads/dataset/review.json"
+    reviews = generate_document(file_name, max_reviews = 10)
     filtered_documents = filter_documents(reviews)
     bag_of_review_words = create_bag_of_words(filtered_documents)
     bag_of_review_words.to_pickle("yelp_bag_of_review_words.pkl")
