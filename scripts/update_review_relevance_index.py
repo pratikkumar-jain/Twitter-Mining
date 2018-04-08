@@ -101,7 +101,7 @@ def main():
 
     counter = 0
     processed = 0
-    batchSize = 1000
+    batchSize = 500
 
     if len(tweets) > 0:
         for tweetId, tweetObj in tweets.items():
