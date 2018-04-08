@@ -84,6 +84,7 @@ def create_bag_of_words(documents):
     # top_n = feature_array[tfidf_sorting][:n]
     # print("top: ", top_n)
     # creating a dictionary of words in the document and the count of that word
+    
     if not os.path.exists('saved_bag_of_words.pickle'):
         # print("YES")
         dict_vocab = {}
@@ -92,7 +93,10 @@ def create_bag_of_words(documents):
             dict_vocab = pickle.load(fp)
 
     for i in range(len(names)):
-        dict_vocab[names[i]] = count[0][i]
+        if names[i] in dict_vocab:
+            dict_vocab[names[i]] += count[0][i]
+        else:
+            dict_vocab[names[i]] = count[0][i]
 
     with open('saved_bag_of_words.pickle','wb') as fp:
         pickle.dump(dict_vocab, fp)
