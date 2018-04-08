@@ -9,6 +9,7 @@ from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 import pdb
 import pickle
+import os
 
 def filter_documents(docs):
     # package to check if a word is in Dictionary
@@ -83,9 +84,11 @@ def create_bag_of_words(documents):
     # top_n = feature_array[tfidf_sorting][:n]
     # print("top: ", top_n)
     # creating a dictionary of words in the document and the count of that word
-    dict_vocab = {}
-
-    with open('saved_bag_of_words.pickle', 'rb') as fp:
+    if not os.path.exists('saved_bag_of_words.pickle'):
+        # print("YES")
+        dict_vocab = {}
+    else:
+        with open('saved_bag_of_words.pickle', 'rb') as fp:
             dict_vocab = pickle.load(fp)
 
     for i in range(len(names)):
