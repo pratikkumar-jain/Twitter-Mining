@@ -97,7 +97,7 @@ Open the CQL shell
 Execute the command :
 ``cqlsh>SOURCE '~/scripts/tweets-schema-cassandra.cql'``
 
-## Creating Bag of Words (Yelp Reviews)
+## Yelp Reviews Bag of Words
 
  The dataset used for creating Bag of Words of Yelp reviews is available of the Yelp Website.
 
@@ -107,11 +107,21 @@ To download the Yelp dataset, click [here](https://www.yelp.com/dataset). The da
 
 ### Understanding the Dataset
 
-The dataset consists of six JSON files. The overview of all the files can be seen [here](https://www.yelp.com/dataset/documentation/json). The file used for creating bag of words is review.json.![review.json](/readme_files/review_json.png) 
+The dataset consists of six JSON files. The overview of all the files can be seen [here](https://www.yelp.com/dataset/documentation/json). The file used for creating bag of words is review.json. The reviews are stored in string format in 'text' attribute.
 
-The reviews are stored in string format in 'text' attribute.
+![review.json](/readme_files/review_json.png) 
 
+### Creating bag of words
 
+* Change the working directory to
+
+  ``... Twitter-Mining/scripts``
+
+* Change ``file_name`` with the path of the yelp dataset in ``yelp_review_mining.py``
+
+* Now being in scripts folder run the following command on terminal
+
+  ``python3 yelp_review_mining.py``
 
 ## Running the code
 
