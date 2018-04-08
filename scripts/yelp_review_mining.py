@@ -1,15 +1,18 @@
 import enchant
 import json
-import pandas as pd
 import numpy as np
+import os
+import pandas as pd
+import pdb
+import pickle
+
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
 from nltk.tokenize import sent_tokenize
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-import pdb
-import pickle
-import os
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 def filter_documents(docs):
     # package to check if a word is in Dictionary
@@ -28,7 +31,7 @@ def filter_documents(docs):
         filtered_vocab.extend(filtered_words)
         output_text2.append(' '.join(filtered_words))
 
-    ## Slightly optimized function to get filtered vocab. Do not delete.
+    # Slightly optimized function to get filtered vocab. Do not delete.
     # new_filtered_vocab = []
     # for word in tokenizer.tokenize(' '.join(output_text)):
     #         if d.check(word) and not word.isdigit():
@@ -38,7 +41,8 @@ def filter_documents(docs):
     print("Words filtered!")
     return [' '.join(output_text2)]
 
-def generate_document(filename, max_reviews = 50000, savepath = None):
+
+def generate_document(filename, max_reviews=50000, savepath=None):
 
     review_doc = []
     output_text = []
@@ -77,6 +81,7 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
 
     # TODO: Save filtered documents
 
+
 def create_bag_of_words(documents):
 
     # function to create Bag of Words by removing stop words
@@ -113,7 +118,7 @@ def create_bag_of_words(documents):
             dict_vocab[names[i]] = count[0][i]
     # print(dict_vocab)
 
-    with open('saved_bag_of_words.pickle','wb') as fp:
+    with open('saved_bag_of_words.pickle', 'wb') as fp:
         pickle.dump(dict_vocab, fp)
 
     df = pd.DataFrame(list(dict_vocab.items()), columns=['word', 'count'])
@@ -121,19 +126,22 @@ def create_bag_of_words(documents):
     # Normalize count
     max_count = df['count'].max()
     min_count = df['count'].min()
-    df['normalized_count'] = (df['count'] - min_count) / (max_count - min_count)
+    df['normalized_count'] = (df['count'] - min_count) / \
+        (max_count - min_count)
 
     bag_of_words = df.loc[df['normalized_count'] >= 0.1]
     # print(bag_of_words)
     print("bag_of_words created!")
     return bag_of_words
 
+
 def main():
     file_name = "/Users/pratik/Downloads/dataset/review.json"
-    reviews = generate_document(file_name, max_reviews = 10)
+    reviews = generate_document(file_name, max_reviews=10)
     filtered_documents = filter_documents(reviews)
     bag_of_review_words = create_bag_of_words(filtered_documents)
     bag_of_review_words.to_pickle("yelp_bag_of_review_words.pkl")
+
 
 if __name__ == '__main__':
     main()
