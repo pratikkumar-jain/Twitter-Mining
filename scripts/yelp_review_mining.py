@@ -51,6 +51,9 @@ def generate_document(filename, max_reviews = 50000, savepath = None):
             output_text.append(out)
 
     completed = 0
+    with open('count.pickle', 'rb') as fp:
+            completed = pickle.load(fp)
+            
     count = 0
     with open(filename, 'r') as f:
         for i, line in enumerate(f):
