@@ -111,6 +111,15 @@ def mineTweet(root, api, drive, searchQuery):
                 except tweepy.TweepError as e:
                     # Just exit if any error
                     print('some error : {}'.format(e))
+                    zipFile = root + '/tweet_compressed_{}.zip'.format(
+                        datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print('Zipping remaining tweet\'s data to {}'
+                          .format(zipFile))
+                    with ZipFile(zipFile, 'w') as zipHandle:
+                        for file in os.listdir(root):
+                            if file.endswith('json'):
+                                zipHandle.write(root + '/' + file)
+                                os.remove(root + '/' + file)
                     break
 
             iteration += 1
