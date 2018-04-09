@@ -123,6 +123,8 @@ The dataset consists of six JSON files. The overview of all the files can be see
 
   ``python3 yelp_review_mining.py``
 
+* Running the code once will read and create Bag of Words for 50000 reviews. Multiple runs will add bag of words to the same model. 
+
 ## Running the code
 
 ### Extracting data
