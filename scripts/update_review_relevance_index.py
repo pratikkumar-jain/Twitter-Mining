@@ -11,6 +11,8 @@ from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
 import pandas as pd
 import pdb
+import json
+from pprint import pprint
 
 def getTweets(session):
     """Get all tweets with all fields."""
@@ -31,6 +33,8 @@ def getTweets(session):
 def processTweet(tweet_txt):
 
     # TODO: Expand tweet
+    tweetExpansion_dict = json.load(open('dictionary_tweetExpansion.json'))
+    pprint('expansion dict',tweetExpansion_dict)
     # Remove stop words
     # Lemmatize
 
