@@ -2,15 +2,14 @@
 
 """Script to update the review relevance index for all tweets."""
 
-from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement
-from textblob import TextBlob
-import enchant
 from nltk.tokenize import RegexpTokenizer
-from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
+from cassandra.cluster import Cluster
+from nltk.stem import PorterStemmer
+from textblob import TextBlob
 import pandas as pd
-import pdb
+import enchant
 
 def getTweets(session):
     """Get all tweets with all fields."""
@@ -80,7 +79,7 @@ def batchUpdate(batch, session, startId, endId, counter):
 def main():
     """Initialize everything."""
 
-    df = pd.read_pickle('yelp_bag_of_review_words.pkl')
+    df = pd.read_pickle('../data/yelp_bag_of_review_words.pkl')
 
     # Create instance of local cassandra cluster
     cluster = Cluster()
