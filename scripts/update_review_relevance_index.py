@@ -32,8 +32,7 @@ def getTweets(session):
 
 def processTweet(tweet_txt):
 
-    # TODO: Expand tweet
-    
+    # TODO:
     # Remove stop words
     # Lemmatize
 
@@ -46,12 +45,12 @@ def processTweet(tweet_txt):
     #     if english_dict.check(word) and not word.isdigit():
     #         lemmatizer.lemmatize(word)
     #         processed_tweet.append(word.lower())
+    """Expand shortforms/slangs based on high frequency words in tweets"""
     tweetWordsList = tweet_txt.split()
     for i in range(len(tweetWordsList)):
         key = tweetWordsList[i].lower()
         if key in tweetExpansion_dict:
-            tweetWordsList[i] = tweetExpansion_dict[key]
-            print('new word',tweetWordsList[i])
+            tweetWordsList[i] = tweetExpansion_dict[key]            
     
     for word in tokenizer.tokenize(tweet_txt):
         lemmatizer.lemmatize(word)
