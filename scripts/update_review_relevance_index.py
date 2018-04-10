@@ -40,10 +40,6 @@ def processTweet(tweet_txt):
 
     processed_tweet = []
 
-    # for word in tokenizer.tokenize(tweet_txt):
-    #     if english_dict.check(word) and not word.isdigit():
-    #         lemmatizer.lemmatize(word)
-    #         processed_tweet.append(word.lower())
     for word in tokenizer.tokenize(tweet_txt):
         lemmatizer.lemmatize(word)
         processed_tweet.append(word.lower())
