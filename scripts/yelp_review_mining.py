@@ -140,7 +140,7 @@ def main():
     reviews = generate_document(file_name, max_reviews=10)
     filtered_documents = filter_documents(reviews)
     bag_of_review_words = create_bag_of_words(filtered_documents)
-    bag_of_review_words.to_pickle("yelp_bag_of_review_words.pkl")
+    bag_of_review_words.to_pickle("../data/yelp_bag_of_review_words.pkl")
 
 
 if __name__ == '__main__':
