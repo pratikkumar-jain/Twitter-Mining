@@ -42,13 +42,13 @@ STEP 2: Additional Dependencies
 
   If you want to explore other installation methods please visit the module's documentation [here](http://docs.tweepy.org/en/v3.4.0/install.html)
 
-  * PyEnchant:
+* PyEnchant:
 
-    Run the following command on terminal to install the dependency.
+  Run the following command on terminal to install the dependency.
 
-    ``pip3 install pyenchant``
+  ``pip3 install pyenchant``
 
-    If you want to explore other installation methods please visit the module's documentation [here](https://pypi.python.org/pypi/pyenchant/)
+  If you want to explore other installation methods please visit the module's documentation [here](https://pypi.python.org/pypi/pyenchant/)
 
 STEP 3: Cloning the repository
 
