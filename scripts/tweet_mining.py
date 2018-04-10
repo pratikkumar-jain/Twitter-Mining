@@ -26,8 +26,10 @@ def mineTweet(root, api, drive, searchQuery):
 
     # If results from a specific ID onwards are reqd, set since_id to that ID.
     # else default to no lower limit, go as far back as API allows
-    if os.path.exists('start_point.txt'):
-        with open('start_point.txt', 'r') as startHandle:
+    sQry = searchQuery.replace(' ', '_')
+    startPoint = '{}-start_point.txt'.format(sQry)
+    if os.path.exists(startPoint):
+        with open(startPoint, 'r') as startHandle:
             sinceId = int(startHandle.read().strip()) + 1
 
         print('Restarting mining from {}'.format(sinceId))
@@ -54,6 +56,7 @@ def mineTweet(root, api, drive, searchQuery):
 
             fileId = datetime.now().strftime('%Y%m%d%H%M%S%f')
             sQry = searchQuery.replace(' ', '_')
+            startPoint = '{}-start_point.txt'.format(sQry)
             outputFileName = root + '/{}-tweets_{}.json'.format(sQry, fileId)
 
             lastSearch = False
@@ -102,12 +105,21 @@ def mineTweet(root, api, drive, searchQuery):
 
                     # Create start point for next run
                     if iteration == 0:
-                        with open('start_point.txt', 'w') as startHandle:
+                        with open(startPoint, 'w') as startHandle:
                             startHandle.write(str(start_id))
 
                 except tweepy.TweepError as e:
                     # Just exit if any error
                     print('some error : {}'.format(e))
+                    zipFile = root + '/tweet_compressed_{}.zip'.format(
+                        datetime.now().strftime('%Y%m%d%H%M%S'))
+                    print('Zipping remaining tweet\'s data to {}'
+                          .format(zipFile))
+                    with ZipFile(zipFile, 'w') as zipHandle:
+                        for file in os.listdir(root):
+                            if file.endswith('json'):
+                                zipHandle.write(root + '/' + file)
+                                os.remove(root + '/' + file)
                     break
 
             iteration += 1

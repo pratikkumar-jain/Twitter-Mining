@@ -18,6 +18,10 @@ CREATE TABLE IF NOT EXISTS tweets(
  user_screen_name text,
  user_verified boolean,
  user_favourites_count int,
+ review_relevance_index float,
+ normalized_review_relevance_index float,
+ support_index float,
+ normalized_support_index float,
  tweet_polarity float,
  tweet_subjectivity float
 );
