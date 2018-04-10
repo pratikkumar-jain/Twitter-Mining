@@ -1,7 +1,5 @@
 .DS_Store
-data/*
 *.json
 *.txt
 *.zip
 processed/*
-*.pkl
