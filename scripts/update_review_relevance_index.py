@@ -2,16 +2,15 @@
 
 """Script to update the review relevance index for all tweets."""
 
-from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement
-from textblob import TextBlob
 from nltk.tokenize import RegexpTokenizer
-from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
+from cassandra.cluster import Cluster
+from nltk.stem import PorterStemmer
+from textblob import TextBlob
 import pandas as pd
-import pdb
+import enchant
 import json
-from pprint import pprint
 
 def getTweets(session):
     """Get all tweets with all fields."""
