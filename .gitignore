@@ -4,4 +4,3 @@ data/*
 *.txt
 *.zip
 processed/*
-*.pkl
