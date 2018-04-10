@@ -5,10 +5,11 @@
 from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement
 from textblob import TextBlob
-import pdb
+
 
 def getTweets(session):
     """Get all tweets with all fields."""
+
     tweets = {}
 
     # Creating dynamic CQL query
@@ -44,6 +45,7 @@ def calculateNormalizedSupportIndex(maxSupport, minSupport, tweetObj):
 
 def batchUpdate(batch, session, startId, endId, counter):
     """Update sentiment in batches."""
+
     try:
         print('Processing Batch of {} {} {}'.format(
             counter, startId, endId), end=', ')
@@ -55,6 +57,7 @@ def batchUpdate(batch, session, startId, endId, counter):
 
 def main():
     """Initialize everything."""
+
     # Create instance of local cassandra cluster
     cluster = Cluster()
 
