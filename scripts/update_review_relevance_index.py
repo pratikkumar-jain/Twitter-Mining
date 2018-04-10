@@ -2,15 +2,17 @@
 
 """Script to update the review relevance index for all tweets."""
 
-from cassandra.query import BatchStatement
-from nltk.tokenize import RegexpTokenizer
-from nltk.stem import WordNetLemmatizer
 from cassandra.cluster import Cluster
-from nltk.stem import PorterStemmer
+from cassandra.query import BatchStatement
 from textblob import TextBlob
+from nltk.tokenize import RegexpTokenizer
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
 import pandas as pd
-import enchant
+import pdb
 import json
+
+tweetExpansion_dict = json.load(open('../data/dictionary_tweetExpansion.json'))
 
 def getTweets(session):
     """Get all tweets with all fields."""
@@ -31,8 +33,7 @@ def getTweets(session):
 def processTweet(tweet_txt):
 
     # TODO: Expand tweet
-    tweetExpansion_dict = json.load(open('../data/dictionary_tweetExpansion.json'))
-    print('expansion dict',tweetExpansion_dict)
+    
     # Remove stop words
     # Lemmatize
 
@@ -45,10 +46,14 @@ def processTweet(tweet_txt):
     #     if english_dict.check(word) and not word.isdigit():
     #         lemmatizer.lemmatize(word)
     #         processed_tweet.append(word.lower())
+    tweetWordsList = tweet_txt.split()
+    for i in range(len(tweetWordsList)):
+        key = tweetWordsList[i].lower()
+        if key in tweetExpansion_dict:
+            tweetWordsList[i] = tweetExpansion_dict[key]
+            print('new word',tweetWordsList[i])
+    
     for word in tokenizer.tokenize(tweet_txt):
-        if word in tweetExpansion_dict:
-            word=tweetExpansion_dict[word]
-            print('new word',word)
         lemmatizer.lemmatize(word)
         processed_tweet.append(word.lower())
     return processed_tweet
@@ -89,7 +94,7 @@ def main():
     """Initialize everything."""
 
     df = pd.read_pickle('../data/yelp_bag_of_review_words.pkl')
-
+    
     # Create instance of local cassandra cluster
     cluster = Cluster()
 
