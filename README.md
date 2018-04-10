@@ -42,6 +42,14 @@ STEP 2: Additional Dependencies
 
   If you want to explore other installation methods please visit the module's documentation [here](http://docs.tweepy.org/en/v3.4.0/install.html)
 
+  * PyEnchant:
+
+    Run the following command on terminal to install the dependency.
+
+    ``pip3 install pyenchant``
+
+    If you want to explore other installation methods please visit the module's documentation [here](https://pypi.python.org/pypi/pyenchant/)
+
 STEP 3: Cloning the repository
 
 Run the following command on terminal to clone the repository or optionally you can use any other git management tool
@@ -109,7 +117,7 @@ To download the Yelp dataset, click [here](https://www.yelp.com/dataset). The da
 
 The dataset consists of six JSON files. The overview of all the files can be seen [here](https://www.yelp.com/dataset/documentation/json). The file used for creating bag of words is review.json. The reviews are stored in string format in 'text' attribute.
 
-![review.json](/readme_files/review_json.png) 
+![review.json](/readme_files/review_json.png)
 
 ### Creating bag of words
 
@@ -123,7 +131,7 @@ The dataset consists of six JSON files. The overview of all the files can be see
 
   ``python3 yelp_review_mining.py``
 
-* Running the code once will read and create Bag of Words for 50000 reviews. Multiple runs will add bag of words to the same model. 
+* Running the code once will read and create Bag of Words for 50000 reviews. Multiple runs will add bag of words to the same model.
 
 ## Running the code
 
