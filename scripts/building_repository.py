@@ -55,10 +55,15 @@ def buildDB():
         search_query = file.split('-')[0]
         tweet_insert = session.prepare(qryText)
         with open(root + file, 'r') as fileHandle:
-            print('Loading file: {}'.format(file), end=', ')
+            print('Loading file: {}'.format(file))
+            counter = 0
+            processed = 1
+            batchSize = 500
             try:
                 filedata = json.load(fileHandle)
                 for data in filedata:
+                    if counter == 0:
+                        batch = BatchStatement()
                     # Filtering non-bmp characters from tweet text
                     tweet_text = str(data.get('text')).translate(non_bmp_map)
                     if data.get('id_str'):
@@ -85,9 +90,14 @@ def buildDB():
                                      data.get('user').get('verified'),
                                      data.get('user').get('favourites_count'))
                         batch.add(tweet_insert, qryParams)
-                print('Inserting into database', end=', ')
-                session.execute(batch)
-                print('Done')
+                        processed += 1
+                        counter += 1
+                    if counter % batchSize == 0 or processed == len(filedata):
+                        print('Inserted {} tweets into database'
+                              .format(counter), end=', ')
+                        session.execute(batch)
+                        batch = BatchStatement()
+                        print('Done')
             except Exception as exp:
                 print('Error: {}'.format(exp))
     # Remove the json files
