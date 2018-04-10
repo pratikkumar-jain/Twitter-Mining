@@ -10,6 +10,7 @@ from nltk.stem import PorterStemmer
 from textblob import TextBlob
 import pandas as pd
 import enchant
+import json
 
 def getTweets(session):
     """Get all tweets with all fields."""
@@ -30,16 +31,24 @@ def getTweets(session):
 def processTweet(tweet_txt):
 
     # TODO: Expand tweet
+    tweetExpansion_dict = json.load(open('../data/dictionary_tweetExpansion.json'))
+    print('expansion dict',tweetExpansion_dict)
     # Remove stop words
     # Lemmatize
 
-    english_dict = enchant.Dict("en_US")
     tokenizer = RegexpTokenizer(r'\w+')
     lemmatizer = WordNetLemmatizer()
 
     processed_tweet = []
 
+    # for word in tokenizer.tokenize(tweet_txt):
+    #     if english_dict.check(word) and not word.isdigit():
+    #         lemmatizer.lemmatize(word)
+    #         processed_tweet.append(word.lower())
     for word in tokenizer.tokenize(tweet_txt):
+        if word in tweetExpansion_dict:
+            word=tweetExpansion_dict[word]
+            print('new word',word)
         lemmatizer.lemmatize(word)
         processed_tweet.append(word.lower())
     return processed_tweet
