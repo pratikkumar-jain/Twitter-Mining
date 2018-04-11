@@ -33,3 +33,17 @@ def calculateNormalizedInfluenceIndex(maxInfluence, minInfluence, tweetObj):
     normalized_influence_index = 100 * (tweetObj.user_followers_count - minInfluence) / (maxInfluence - minInfluence)
 
     return normalized_influence_index
+
+
+
+
+def batchUpdate(batch, session, startId, endId, counter):
+    """Update sentiment in batches."""
+
+    try:
+        print('Processing Batch of {} {} {}'.format(
+            counter, startId, endId), end=', ')
+        session.execute(batch)
+        print('Update Success')
+    except Exception as exp:
+        print('Exception in updating: {}, Update Failed'.format(exp))
