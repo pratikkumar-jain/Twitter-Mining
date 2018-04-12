@@ -79,7 +79,7 @@ def calculateNormalizedReviewRelevanceIndex(max_value, min_value, tweetObj):
 
     review_relevance_index = tweetObj.review_relevance_index if (tweetObj.review_relevance_index and tweetObj.review_relevance_index >= 0.0 and tweetObj.review_relevance_index <=1.0) else min_value
 
-    if review_relevance_index == 0:
+    if review_relevance_index == 0 or max_value == 0:
         return -1;
 
     normalized_review_relevance_index = (review_relevance_index - min_value) / (max_value - min_value)
