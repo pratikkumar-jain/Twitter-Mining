@@ -43,7 +43,7 @@ def calculateNormalizedSupportIndex(maxSupport, minSupport, tweetObj):
 
     support_index = tweetObj.support_index if (tweetObj.support_index or tweetObj.support_index != 0) else minSupport
 
-    if support_index == 0:
+    if support_index == 0 or maxSupport == 0:
         return -1;
 
     normalized_support_index = 100 * (support_index - minSupport) / (maxSupport - minSupport)
