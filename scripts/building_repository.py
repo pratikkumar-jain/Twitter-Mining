@@ -88,7 +88,8 @@ def buildDB():
                                      data.get('user').get('statuses_count'),
                                      data.get('user').get('screen_name'),
                                      data.get('user').get('verified'),
-                                     data.get('user').get('favourites_count'))
+                                     data.get('user').get('favourites_count'),
+                                     data.get('retweeted'))
                         batch.add(tweet_insert, qryParams)
                         processed += 1
                         counter += 1
