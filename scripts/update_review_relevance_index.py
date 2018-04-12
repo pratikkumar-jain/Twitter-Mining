@@ -50,11 +50,15 @@ def processTweet(tweet_txt):
     for i in range(len(tweetWordsList)):
         key = tweetWordsList[i].lower()
         if key in tweetExpansion_dict:
-            tweetWordsList[i] = tweetExpansion_dict[key]            
-    
+            tweetWordsList[i] = tweetExpansion_dict[key]
+
     for word in tokenizer.tokenize(tweet_txt):
         lemmatizer.lemmatize(word)
         processed_tweet.append(word.lower())
+
+    if not processed_tweet:
+        print("WARNING: Processed tweet is empty!")
+
     return processed_tweet
 
 def calculateReviewRelevanceIndex(tweetObj, df):
@@ -74,6 +78,10 @@ def calculateReviewRelevanceIndex(tweetObj, df):
 def calculateNormalizedReviewRelevanceIndex(max_value, min_value, tweetObj):
 
     review_relevance_index = tweetObj.review_relevance_index if (tweetObj.review_relevance_index and tweetObj.review_relevance_index >= 0.0 and tweetObj.review_relevance_index <=1.0) else min_value
+
+    if review_relevance_index == 0:
+        return -1;
+
     normalized_review_relevance_index = (review_relevance_index - min_value) / (max_value - min_value)
 
     return normalized_review_relevance_index
@@ -93,7 +101,7 @@ def main():
     """Initialize everything."""
 
     df = pd.read_pickle('../data/yelp_bag_of_review_words.pkl')
-    
+
     # Create instance of local cassandra cluster
     cluster = Cluster()
 
