@@ -22,6 +22,9 @@ def getTweets(session):
     for result in results:
         tweets[result.tweet_id] = result
 
+    if not tweets:
+        print("WARNING: Tweet is empty!")
+
     return tweets
 
 
@@ -39,6 +42,10 @@ def calculateSupportIndex(tweetObj):
 def calculateNormalizedSupportIndex(maxSupport, minSupport, tweetObj):
 
     support_index = tweetObj.support_index if (tweetObj.support_index or tweetObj.support_index != 0) else minSupport
+
+    if support_index == 0:
+        return -1;
+
     normalized_support_index = 100 * (support_index - minSupport) / (maxSupport - minSupport)
 
     return normalized_support_index
