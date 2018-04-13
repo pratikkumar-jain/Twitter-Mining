@@ -53,6 +53,8 @@ def buildDB():
             continue
         batch = BatchStatement()
         search_query = file.split('-')[0]
+        if search_query != 'chipotle':
+            continue
         tweet_insert = session.prepare(qryText)
         with open(root + file, 'r') as fileHandle:
             print('Loading file: {}'.format(file))
@@ -77,7 +79,10 @@ def buildDB():
                             place = data.get('place')['full_name']
                         else:
                             place = 'place'
-
+                        if data.get('retweeted_status'):
+                            retweeted = True
+                        else:
+                            retweeted = False
                         qryParams = (data.get('id_str'), tweet_text,
                                      search_query, data.get('favorite_count'),
                                      data.get('retweet_count'),
@@ -89,7 +94,7 @@ def buildDB():
                                      data.get('user').get('screen_name'),
                                      data.get('user').get('verified'),
                                      data.get('user').get('favourites_count'),
-                                     data.get('retweeted'))
+                                     retweeted)
                         batch.add(tweet_insert, qryParams)
                         processed += 1
                         counter += 1
