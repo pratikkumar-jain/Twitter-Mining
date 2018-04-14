@@ -97,6 +97,9 @@ Then switch to the new Cassandra bin directory and start up Cassandra:
 ### Installing Cassandra on Windows :
 Download the windows installer of Cassandra Datastax Community Server and follow the steps given [here](https://www.datastax.com/2012/01/getting-started-with-apache-cassandra-on-windows-the-easy-way) on  the official documentation.
 
+### Installing ODBC driver for Cassandra and testing it with Tableau:
+Download and install Tableau from [here](https://www.tableau.com/products/desktop/download) and then follow the steps given on Datastax official documentation guide [here](https://www.datastax.com/dev/blog/datastax-odbc-cql-connector-apache-cassandra-datastax-enterprise)
+
 ### Setup Cassandra Driver for Python
 ``pip install cassandra-driver``
 
