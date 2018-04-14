@@ -5,12 +5,14 @@
 from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement
 from textblob import TextBlob
-import enchant
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
 import pandas as pd
 import pdb
+import json
+
+tweetExpansion_dict = json.load(open('../data/dictionary_tweetExpansion.json'))
 
 def getTweets(session):
     """Get all tweets with all fields."""
@@ -30,11 +32,10 @@ def getTweets(session):
 
 def processTweet(tweet_txt):
 
-    # TODO: Expand tweet
+    # TODO:
     # Remove stop words
     # Lemmatize
 
-    english_dict = enchant.Dict("en_US")
     tokenizer = RegexpTokenizer(r'\w+')
     lemmatizer = WordNetLemmatizer()
 
@@ -44,9 +45,20 @@ def processTweet(tweet_txt):
     #     if english_dict.check(word) and not word.isdigit():
     #         lemmatizer.lemmatize(word)
     #         processed_tweet.append(word.lower())
+    """Expand shortforms/slangs based on high frequency words in tweets"""
+    tweetWordsList = tweet_txt.split()
+    for i in range(len(tweetWordsList)):
+        key = tweetWordsList[i].lower()
+        if key in tweetExpansion_dict:
+            tweetWordsList[i] = tweetExpansion_dict[key]
+
     for word in tokenizer.tokenize(tweet_txt):
         lemmatizer.lemmatize(word)
         processed_tweet.append(word.lower())
+
+    if not processed_tweet:
+        print("WARNING: Processed tweet is empty!")
+
     return processed_tweet
 
 def calculateReviewRelevanceIndex(tweetObj, df):
@@ -66,6 +78,10 @@ def calculateReviewRelevanceIndex(tweetObj, df):
 def calculateNormalizedReviewRelevanceIndex(max_value, min_value, tweetObj):
 
     review_relevance_index = tweetObj.review_relevance_index if (tweetObj.review_relevance_index and tweetObj.review_relevance_index >= 0.0 and tweetObj.review_relevance_index <=1.0) else min_value
+
+    if review_relevance_index == 0 or max_value == 0:
+        return -1;
+
     normalized_review_relevance_index = (review_relevance_index - min_value) / (max_value - min_value)
 
     return normalized_review_relevance_index
@@ -84,7 +100,7 @@ def batchUpdate(batch, session, startId, endId, counter):
 def main():
     """Initialize everything."""
 
-    df = pd.read_pickle('yelp_bag_of_review_words.pkl')
+    df = pd.read_pickle('../data/yelp_bag_of_review_words.pkl')
 
     # Create instance of local cassandra cluster
     cluster = Cluster()

@@ -53,12 +53,19 @@ def buildDB():
             continue
         batch = BatchStatement()
         search_query = file.split('-')[0]
+        if search_query != 'chipotle':
+            continue
         tweet_insert = session.prepare(qryText)
         with open(root + file, 'r') as fileHandle:
-            print('Loading file: {}'.format(file), end=', ')
+            print('Loading file: {}'.format(file))
+            counter = 0
+            processed = 1
+            batchSize = 500
             try:
                 filedata = json.load(fileHandle)
                 for data in filedata:
+                    if counter == 0:
+                        batch = BatchStatement()
                     # Filtering non-bmp characters from tweet text
                     tweet_text = str(data.get('text')).translate(non_bmp_map)
                     if data.get('id_str'):
@@ -72,7 +79,10 @@ def buildDB():
                             place = data.get('place')['full_name']
                         else:
                             place = 'place'
-
+                        if data.get('retweeted_status'):
+                            retweeted = True
+                        else:
+                            retweeted = False
                         qryParams = (data.get('id_str'), tweet_text,
                                      search_query, data.get('favorite_count'),
                                      data.get('retweet_count'),
@@ -83,11 +93,17 @@ def buildDB():
                                      data.get('user').get('statuses_count'),
                                      data.get('user').get('screen_name'),
                                      data.get('user').get('verified'),
-                                     data.get('user').get('favourites_count'))
+                                     data.get('user').get('favourites_count'),
+                                     retweeted)
                         batch.add(tweet_insert, qryParams)
-                print('Inserting into database', end=', ')
-                session.execute(batch)
-                print('Done')
+                        processed += 1
+                        counter += 1
+                    if counter % batchSize == 0 or processed == len(filedata):
+                        print('Inserted {} tweets into database'
+                              .format(counter), end=', ')
+                        session.execute(batch)
+                        batch = BatchStatement()
+                        print('Done')
             except Exception as exp:
                 print('Error: {}'.format(exp))
     # Remove the json files

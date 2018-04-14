@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS tweets(
  normalized_review_relevance_index float,
  support_index float,
  normalized_support_index float,
+ normalized_influential_index float,
  tweet_polarity float,
- tweet_subjectivity float
+ tweet_subjectivity float,
+ retweeted boolean
 );
