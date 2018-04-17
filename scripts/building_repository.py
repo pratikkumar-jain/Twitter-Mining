@@ -53,8 +53,8 @@ def buildDB():
             continue
         batch = BatchStatement()
         search_query = file.split('-')[0]
-        if search_query != 'chipotle':
-            continue
+        # if search_query != 'chipotle':
+        #     continue
         tweet_insert = session.prepare(qryText)
         with open(root + file, 'r') as fileHandle:
             print('Loading file: {}'.format(file))
@@ -99,8 +99,8 @@ def buildDB():
                         processed += 1
                         counter += 1
                     if counter % batchSize == 0 or processed == len(filedata):
-                        print('Inserted {} tweets into database'
-                              .format(counter), end=', ')
+                        print('Inserted {} tweets into database'.format(
+                            counter), end=', ')
                         session.execute(batch)
                         batch = BatchStatement()
                         print('Done')
