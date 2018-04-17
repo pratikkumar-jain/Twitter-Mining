@@ -79,7 +79,7 @@ def calculateNormalizedReviewRelevanceIndex(max_value, min_value, tweetObj):
 
     review_relevance_index = tweetObj.review_relevance_index if (tweetObj.review_relevance_index and tweetObj.review_relevance_index >= 0.0 and tweetObj.review_relevance_index <=1.0) else min_value
 
-    if review_relevance_index == 0 or max_value == 0:
+    if not review_relevance_index:
         return -1;
 
     normalized_review_relevance_index = (review_relevance_index - min_value) / (max_value - min_value)
@@ -145,7 +145,7 @@ def main():
     max_value = max_result.current_rows[0].max_value
     min_result = session.execute('select min(review_relevance_index) as min_value from tweets where review_relevance_index >=0.0 and review_relevance_index <= 1.0 allow filtering;')
     min_value = min_result.current_rows[0].min_value
-
+    print(max_value, min_result)
     qryText = qryText.replace('review_relevance_index', 'normalized_review_relevance_index')
     tweetUpdate = session.prepare(qryText)
 
