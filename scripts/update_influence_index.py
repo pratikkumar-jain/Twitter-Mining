@@ -28,10 +28,8 @@ def getTweets(session):
 
 
 def calculateNormalizedInfluenceIndex(maxInfluence, minInfluence, tweetObj):
-
-   # support_index = tweetObj.support_index if (tweetObj.support_index or tweetObj.support_index != 0) else minSupport
-    normalized_influence_index = 100.0 * (tweetObj.user_followers_count - minInfluence) / (maxInfluence - minInfluence)
-
+    """Normalizing Number of followers"""
+    normalized_influence_index = 100 * (tweetObj.user_followers_count - minInfluence) / (maxInfluence - minInfluence)
     return normalized_influence_index
 
 
