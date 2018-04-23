@@ -73,7 +73,8 @@ def calculateReviewRelevanceIndex(tweetObj, df):
         review_record = df.loc[df['word'] == word]
         tweet_score += 0 if review_record.empty else review_record['normalized_count']
 
-    return tweet_score / len(tweet_txt)
+    # return tweet_score / len(tweet_txt)
+    return tweet_score
 
 def calculateNormalizedReviewRelevanceIndex(max_value, min_value, tweetObj):
 
