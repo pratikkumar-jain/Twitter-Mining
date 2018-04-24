@@ -137,7 +137,7 @@ def create_bag_of_words(documents):
 
 def main():
     file_name = "/Users/pratik/Downloads/dataset/review.json"
-    reviews = generate_document(file_name, max_reviews=10)
+    reviews = generate_document(file_name, max_reviews=50000)
     filtered_documents = filter_documents(reviews)
     bag_of_review_words = create_bag_of_words(filtered_documents)
     bag_of_review_words.to_pickle("../data/yelp_bag_of_review_words.pkl")

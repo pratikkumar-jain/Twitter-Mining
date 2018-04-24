@@ -6,8 +6,6 @@ import json
 import os
 import shutil
 import sys
-
-
 from cassandra.cluster import Cluster
 from cassandra.query import BatchStatement
 from zipfile import ZipFile
@@ -53,13 +51,12 @@ def buildDB():
             continue
         batch = BatchStatement()
         search_query = file.split('-')[0]
-        if search_query != 'chipotle':
-            continue
         tweet_insert = session.prepare(qryText)
         with open(root + file, 'r') as fileHandle:
             print('Loading file: {}'.format(file))
             counter = 0
             processed = 1
+            """Creating batches to avoid json too long error"""
             batchSize = 500
             try:
                 filedata = json.load(fileHandle)
@@ -99,8 +96,8 @@ def buildDB():
                         processed += 1
                         counter += 1
                     if counter % batchSize == 0 or processed == len(filedata):
-                        print('Inserted {} tweets into database'
-                              .format(counter), end=', ')
+                        print('Inserted {} tweets into database'.format(
+                            counter), end=', ')
                         session.execute(batch)
                         batch = BatchStatement()
                         print('Done')
