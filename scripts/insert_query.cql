@@ -14,5 +14,6 @@ INSERT INTO tweets (tweet_id,
 					user_verified,
 					user_favourites_count,
           tweet_polarity,
-					tweet_subjectivity)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, -10, -10)
+					tweet_subjectivity,
+					retweeted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, -10, -10, ?)

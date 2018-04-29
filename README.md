@@ -42,6 +42,14 @@ STEP 2: Additional Dependencies
 
   If you want to explore other installation methods please visit the module's documentation [here](http://docs.tweepy.org/en/v3.4.0/install.html)
 
+* PyEnchant:
+
+  Run the following command on terminal to install the dependency.
+
+  ``pip3 install pyenchant``
+
+  If you want to explore other installation methods please visit the module's documentation [here](https://pypi.python.org/pypi/pyenchant/)
+
 STEP 3: Cloning the repository
 
 Run the following command on terminal to clone the repository or optionally you can use any other git management tool
@@ -89,6 +97,9 @@ Then switch to the new Cassandra bin directory and start up Cassandra:
 ### Installing Cassandra on Windows :
 Download the windows installer of Cassandra Datastax Community Server and follow the steps given [here](https://www.datastax.com/2012/01/getting-started-with-apache-cassandra-on-windows-the-easy-way) on  the official documentation.
 
+### Installing ODBC driver for Cassandra and testing it with Tableau:
+Download and install Tableau from [here](https://www.tableau.com/products/desktop/download) and then follow the steps given on Datastax official documentation guide [here](https://www.datastax.com/dev/blog/datastax-odbc-cql-connector-apache-cassandra-datastax-enterprise)
+
 ### Setup Cassandra Driver for Python
 ``pip install cassandra-driver``
 
@@ -96,6 +107,34 @@ Download the windows installer of Cassandra Datastax Community Server and follow
 Open the CQL shell
 Execute the command :
 ``cqlsh>SOURCE '~/scripts/tweets-schema-cassandra.cql'``
+
+## Yelp Reviews Bag of Words
+
+ The dataset used for creating Bag of Words of Yelp reviews is available of the Yelp Website.
+
+### Download the Dataset
+
+To download the Yelp dataset, click [here](https://www.yelp.com/dataset). The dataset is available in two formats: JSON and SQL. The format of the dataset used here is [JSON](https://www.json.org).
+
+### Understanding the Dataset
+
+The dataset consists of six JSON files. The overview of all the files can be seen [here](https://www.yelp.com/dataset/documentation/json). The file used for creating bag of words is review.json. The reviews are stored in string format in 'text' attribute.
+
+![review.json](/readme_files/review_json.png)
+
+### Creating bag of words
+
+* Change the working directory to
+
+  ``... Twitter-Mining/scripts``
+
+* Change ``file_name`` with the path of the yelp dataset in ``yelp_review_mining.py``
+
+* Now being in scripts folder run the following command on terminal
+
+  ``python3 yelp_review_mining.py``
+
+* Running the code once will read and create Bag of Words for 50000 reviews. Multiple runs will add bag of words to the same model.
 
 ## Running the code
 
